@@ -1,0 +1,25 @@
+.root {
+  display: flex;
+}
+
+.listContainer {
+  flex-grow: 1;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+li.expand {
+  list-style-type: none;
+}
+
+button {
+  border: 0;
+  border-radius: 4px;
+  padding: 5px 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+button:active {
+  color: rgba(0, 0, 0, 0.75);
+}
