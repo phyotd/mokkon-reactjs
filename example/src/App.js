@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { List } from 'mokkon-reactjs'
-import 'mokkon-reactjs/dist/index.css'
+import { List } from '@mokkon/reactjs'
+import '@mokkon/reactjs/dist/index.css'
+
 
 const App = () => {
   const pediatricians = [
