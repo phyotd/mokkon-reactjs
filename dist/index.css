@@ -1,0 +1,25 @@
+.__Q-W2 {
+  display: flex;
+}
+
+._2anau {
+  flex-grow: 1;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+li._KjPQP {
+  list-style-type: none;
+}
+
+button {
+  border: 0;
+  border-radius: 4px;
+  padding: 5px 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+button:active {
+  color: rgba(0, 0, 0, 0.75);
+}
