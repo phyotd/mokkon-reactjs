@@ -4,7 +4,7 @@ import styles from '../styles.module.css'
 function List({ groupName, members = [] }) {
     return (
       <div>
-        <h1>1.0.1</h1>
+        <h1>1.0.2</h1>
         <h5>
           Group: <em>{groupName}</em>
         </h5>
