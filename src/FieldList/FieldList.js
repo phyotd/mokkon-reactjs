@@ -80,51 +80,30 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function FieldEditor(props) {
+function FieldList(props) {
     const classes = useStyles();
-    const { fields = [],
-        currentTabName = "account",
-        isNew = false,
-        buttonColor = 'blue',
+    const {
+        fields = [],
         updateData = {},
-        onCreate,
-        onUpdate,
-        onInvite,
-        onCancel,
-        onApproved } = props;
+        onDataCallback
+    } = props;
     const [data, setDataField] = React.useState(updateData != undefined ? updateData : {});
     const [imgPreview, setImgPreviewPath] = React.useState(null);
 
     const handleTextString = (e, fieldName) => {
-        if (isNew) {
-            setDataField({ ...data, [fieldName]: e.target.value });
-        } else {
-            setDataField({ ...data, [fieldName]: e.target.value });
-        }
+        setDataField({ ...data, [fieldName]: e.target.value });
     }
 
     const handleTextNumber = (e, fieldName) => {
-        if (isNew) {
-            setDataField({ ...data, [fieldName]: e.target.value });
-        } else {
-            setDataField({ ...data, [fieldName]: e.target.value });
-        }
+        setDataField({ ...data, [fieldName]: e.target.value });
     }
 
     const handleTextMultiline = (e, fieldName) => {
-        if (isNew) {
-            setDataField({ ...data, [fieldName]: e.target.value });
-        } else {
-            setDataField({ ...data, [fieldName]: e.target.value });
-        }
+        setDataField({ ...data, [fieldName]: e.target.value });
     }
 
     const handleDate = (e, fieldName) => {
-        if (isNew) {
-            setDataField({ ...data, [fieldName]: e.target.value });
-        } else {
-            setDataField({ ...data, [fieldName]: e.target.value });
-        }
+        setDataField({ ...data, [fieldName]: e.target.value });
     }
 
     const handleDropDownChange = (e, fieldName) => {
@@ -133,34 +112,7 @@ function FieldEditor(props) {
 
         var fn = fieldName.split('_');
         var fieldId = fn[0] + '_' + 'id';
-
-        if (isNew) {
-            setDataField({ ...data, [fieldName]: selectedValue, [fieldId]: e.target.value });
-
-        } else {
-            setDataField({ ...data, [fieldName]: selectedValue, [fieldId]: e.target.value });
-
-        }
-    }
-
-    const handleSave = () => {
-        if (isNew) {
-            onCreate(data);
-        } else {
-            onUpdate(data);
-        }
-    }
-
-    const handleApproved = () => {
-        onApproved(data);
-    }
-
-    const handleCancel = () => {
-        onCancel();
-    }
-
-    const handleInvite = () => {
-        onInvite(data);
+        setDataField({ ...data, [fieldName]: selectedValue, [fieldId]: e.target.value });
     }
 
     const handleImgUpload = (e, fieldName) => {
@@ -172,9 +124,12 @@ function FieldEditor(props) {
             setImgPreviewPath(reader.result);
         }
         reader.readAsDataURL(file);
-        // setDataField({ ...data, [fieldName]: e.target.files[0].name });
+        setDataField({ ...data, [fieldName]: e.target.files[0].name });
     }
-    console.log('file upload :', data);
+
+    const handleDataConfirm = () => {
+        onDataCallback(data);
+    }
 
     return (
         <div className={classes.root}>
@@ -333,60 +288,34 @@ function FieldEditor(props) {
                                 </Grid>;
                             }
                         }
+                        else if (f.type == 'checkbox') {
+                            return <Grid></Grid>;
+                        }
+                        else if (f.type == 'radio') {
+                            return <Grid></Grid>;
+                        }
                     })}
 
                 </Grid>
-
-                {currentTabName == 'account' ?
-                    <Grid item xs={11}>
-                        <Box>
-                            <Button style={{ color: 'white', backgroundColor: buttonColor != undefined ? buttonColor : 'blue', float: 'right' }}
-                                onClick={handleInvite}
-                            > Invite</Button>
-                        </Box>
-                    </Grid>
-                    :
-                    <Grid item xs={11}>
-                        <Box>
-                            <Button style={{ color: 'white', backgroundColor: 'grey', float: 'right', marginLeft: '10px' }}
-                                onClick={handleCancel}
-                            ><CancelIcon /> Cancel</Button>
-                        </Box>
-                        {data.status == 'requested' ? <Box>
-                            <Button style={{ color: 'white', backgroundColor: buttonColor != undefined ? buttonColor : 'blue', float: 'right', marginLeft: '10px' }}
-                                onClick={() => handleApproved()}
-                            >Approved</Button>
-                        </Box> :
-                            <Box >
-                                <Button style={{ color: 'white', backgroundColor: buttonColor != undefined ? buttonColor : 'blue', float: 'right' }}
-                                    onClick={handleSave}
-                                ><SaveIcon /> Save</Button>
-                            </Box>
-                        }
-
-                    </Grid>
-                }
-
+                <Grid item xs={11}>
+                    <Box>
+                        <Button style={{ float: 'right' }}
+                            onClick={handleDataConfirm}
+                        > Confirm</Button>
+                    </Box>
+                </Grid>
 
             </Grid>
         </div>
     );
 }
 
-FieldEditor.propTypes = {
+FieldList.propTypes = {
     history: PropTypes.object,
     fields: PropTypes.array.isRequired,
-    optionsData: PropTypes.array,
-    isNew: PropTypes.bool.isRequired,
-    onCreate: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onCancel: PropTypes.func,
-    onApproved: PropTypes.func,
-    onInvite: PropTypes.func,
-    data: PropTypes.object,
-    currentTabName: PropTypes.string,
-    buttonColor: PropTypes.any
+    updateData: PropTypes.object,
+    onDataCallback: PropTypes.func
 };
 
-export default (FieldEditor);
+export default (FieldList);
 
