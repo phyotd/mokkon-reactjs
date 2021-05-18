@@ -2,7 +2,7 @@ import React from 'react'
 
 import { List, FieldList, TableTemplate, InfoPage } from '@mokkon/reactjs'
 import '@mokkon/reactjs/dist/index.css'
-import { Grid } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
@@ -30,17 +30,22 @@ const App = () => {
     { type: 'text_number', label: 'Longitude', fieldName: 'longitude' },
     { type: 'text_number', label: 'Max Variance', fieldName: 'max_variance' },
     { type: 'text_number', label: 'Min Variance', fieldName: 'min_variance' },
-    { type: 'dropdown', label: 'Customer Name', fieldName: 'customer_name', options: [] },
+    {
+      type: 'dropdown', label: 'Customer Name', fieldName: 'customer_name', options: [
+        { name: 'Name1' }, { name: 'Name2' }, { name: 'Name3' }, { name: 'Name4' }
+      ]
+    },
     // { type: 'checkbox', label: 'Customer Name', fieldName: 'customer_name', checkboxList: [{'label': },{}] },
   ];
 
   const data = {
     delete_time: 0,
     name: "Vendor 13",
+    address: "address",
     update_time: 1610341578878,
     updated_by: "Nine Nine",
     updated_by_id: "kShMtHkcwTNjwm-lfzSBvAzdSo1J8dIpAz6_Ct85HPg",
-    status: 'requested'
+    // status: 'joined'
   }
 
   const headCells = [
@@ -52,28 +57,31 @@ const App = () => {
     console.log('update data :', data);
   }
 
-  const handleDelete = (data) => {
+  const handleDelete = (e,data) => {
     console.log('delete data :', data);
   }
 
-  const handleSave = (data) => {
+  const handleSave = (e,data) => {
     console.log('save data :', data);
   }
 
-  const handleCancel = (data) => {
+  const handleCancel = (e,data) => {
     console.log('cancel data :', data);
   }
+
+  const handleOnActions = (data) => {
+    console.log('handleOnActions :', data);
+  }
   var actions = [
-    { "label": "edit", "action_type": "edit", "icon": <EditIcon /> },
-    { "label": "delete", "action_type": "delete", "callback": handleDelete, "icon": <DeleteIcon /> },
-    { "label": "save", "action_type": "save", "callback": handleSave, "icon": <SaveIcon /> },
-    { "label": "cancel", "action_type": "cancel", "callback": handleCancel, "icon": <CancelIcon /> },
-    // { "label": "delete invitation", "action_type": "delete_invitation", "callback": handleDeleteInvitation, "icon": "" },
-    // { "label": "approve member", "action_type": "approve_member", "callback": handleApprovedMember, "icon": "" },
-    // { "label": "disable member", "action_type": "disable_member", "callback": handleDisableMember, "icon": "" },
-    // { "label": "enable member", "action_type": "enable_member", "callback": handleEnableMember, "icon": "" },
-    // { "label": "invite member", "action_type": "invite_member", "callback": handleMemberInvite, "icon": "" },
-    // { "label": "", "action_type": "back_btn", "callback": handleBack, "icon": "" },
+    { "label": "edit", "action_type": "edit", "icon": <EditIcon />, "callback": (e, d) => { handleSave(e, d) } },
+    { "label": "delete", "action_type": "delete", "callback": (e, d) => { handleDelete(e, d) }, "icon": <DeleteIcon /> },
+    { "label": "save", "action_type": "save", "callback": (e, d) => { handleSave(e, d) }, "icon": <SaveIcon /> },
+    { "label": "cancel", "action_type": "cancel", "callback": (e, d) => { handleCancel(e, d) }, "icon": <CancelIcon /> },
+    { "label": "delete invitation", "action_type": "delete_invitation", "callback": (e, d) => { handleCancel() }, "icon": "", status: "invited" },
+    { "label": "approve member", "action_type": "approve_member", "callback": (e, d) => { handleCancel(e, d) }, "icon": "", status: "joined" },
+    { "label": "disable member", "action_type": "disable_member", "callback": (e, d) => { handleCancel(e, d) }, "icon": "", status: "joined" },
+    { "label": "enable member", "action_type": "enable_member", "callback": (e, d) => { handleCancel(e, d) }, "icon": "", status: "disabled" },
+    { "label": "invite member", "action_type": "invite_member", "callback": (e, d) => { handleCancel(e, d) }, "icon": "", status: "requested" },
 
   ];
   var tableData = [data];
@@ -88,25 +96,25 @@ const App = () => {
       </div> */}
 
       {/*field list */}
-      {/* <div className="listContainer">
+      <div className="listContainer">
+        <Typography variant='h3'>Fields</Typography>
         <Grid container>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <FieldList
               fields={fields}
               updateData={data}
               buttonColor={'#f05f40'}
-              // onUpdate={() => console.log('on update')}
-              // onCancel={() => console.log('on cancel')}
-              // onApproved={() => console.log('on approved')}
-              // onCreate={() => console.log('on create')}
-              // onInvite={() => console.log('on invite')}
+              currentTabName={'account'}
+              isNew={true}
+              actions={actions}
+              onActions={(d) => { handleOnActions(d) }}
             ></FieldList>
           </Grid>
         </Grid>
-      </div> */}
+      </div>
 
       {/*info page */}
-      <div className="listContainer">
+      {/* <div className="listContainer">
         <Grid container>
           <Grid item xs={12} sm={6}>
             <InfoPage
@@ -122,7 +130,7 @@ const App = () => {
             ></InfoPage>
           </Grid>
         </Grid>
-      </div>
+      </div> */}
 
       {/*table template */}
       {/* <div className="listContainer">
