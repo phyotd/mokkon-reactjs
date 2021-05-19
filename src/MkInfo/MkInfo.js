@@ -63,7 +63,7 @@ function getDataString(data, fieldName) {
 }
 
 
-function InfoPage(props) {
+function MkInfo(props) {
     const classes = useStyles();
     const {
         infoData,
@@ -215,7 +215,7 @@ function InfoPage(props) {
     );
 }
 
-InfoPage.propTypes = {
+MkInfo.propTypes = {
     history: PropTypes.object,
     infoData: PropTypes.object,
     displayFields: PropTypes.array,
@@ -224,4 +224,4 @@ InfoPage.propTypes = {
     actions: PropTypes.any
 };
 
-export default (InfoPage);
+export default (MkInfo);

@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-import ResponsiveDrawer from './ResponsiveDrawer';
+import ResponsiveDrawer from './components/ResponsiveDrawer';
 
 const App = () => {
   const pediatricians = [
