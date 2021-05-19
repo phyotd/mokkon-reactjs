@@ -1,12 +1,13 @@
 import React from 'react'
 
-import { List, FieldList, TableTemplate, InfoPage } from '@mokkon/reactjs'
+import { List, MkForm, TableTemplate, InfoPage } from '@mokkon/reactjs'
 import '@mokkon/reactjs/dist/index.css'
 import { Grid, Typography } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import ResponsiveDrawer from './ResponsiveDrawer';
 
 const App = () => {
   const pediatricians = [
@@ -24,18 +25,18 @@ const App = () => {
   ]
 
   const fields = [
-    { type: 'text_string', label: 'Name', fieldName: 'name' },
-    { type: 'text_multiline', label: 'Address', fieldName: 'address' },
-    { type: 'text_number', label: 'Latitude', fieldName: 'latitude' },
-    { type: 'text_number', label: 'Longitude', fieldName: 'longitude' },
-    { type: 'text_number', label: 'Max Variance', fieldName: 'max_variance' },
-    { type: 'text_number', label: 'Min Variance', fieldName: 'min_variance' },
+    { type: 'text_string', label: 'Name', field_name: 'name' },
+    { type: 'text_multiline', label: 'Address', field_name: 'address' },
+    { type: 'text_number', label: 'Latitude', field_name: 'latitude' },
+    { type: 'text_number', label: 'Longitude', field_name: 'longitude' },
+    { type: 'text_number', label: 'Max Variance', field_name: 'max_variance' },
+    { type: 'text_number', label: 'Min Variance', field_name: 'min_variance' },
     {
-      type: 'dropdown', label: 'Customer Name', fieldName: 'customer_name', options: [
+      type: 'dropdown', label: 'Customer Name', field_name: 'customer_name', option_label_field: "name", options: [
         { name: 'Name1' }, { name: 'Name2' }, { name: 'Name3' }, { name: 'Name4' }
       ]
     },
-    // { type: 'checkbox', label: 'Customer Name', fieldName: 'customer_name', checkboxList: [{'label': },{}] },
+    // { type: 'checkbox', label: 'Customer Name', field_name: 'customer_name', checkboxList: [{'label': },{}] },
   ];
 
   const data = {
@@ -57,15 +58,15 @@ const App = () => {
     console.log('update data :', data);
   }
 
-  const handleDelete = (e,data) => {
+  const handleDelete = (e, data) => {
     console.log('delete data :', data);
   }
 
-  const handleSave = (e,data) => {
+  const handleSave = (e, data) => {
     console.log('save data :', data);
   }
 
-  const handleCancel = (e,data) => {
+  const handleCancel = (e, data) => {
     console.log('cancel data :', data);
   }
 
@@ -96,22 +97,22 @@ const App = () => {
       </div> */}
 
       {/*field list */}
-      <div className="listContainer">
+      <ResponsiveDrawer></ResponsiveDrawer>
+      {/* <div className="listContainer">
         <Typography variant='h3'>Fields</Typography>
         <Grid container>
           <Grid item xs={12}>
-            <FieldList
+            <MkForm
               fields={fields}
               updateData={data}
               buttonColor={'#f05f40'}
               currentTabName={'account'}
               isNew={true}
               actions={actions}
-              onActions={(d) => { handleOnActions(d) }}
-            ></FieldList>
+            ></MkForm>
           </Grid>
         </Grid>
-      </div>
+      </div> */}
 
       {/*info page */}
       {/* <div className="listContainer">

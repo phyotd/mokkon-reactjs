@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import { MButton } from '..';
 
 const filter = createFilterOptions();
 
@@ -82,33 +81,58 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function FieldList(props) {
+function MButton(props) {
+    const classes = useStyles();
+    const { action, onCallback } = props;
+
+    const handleAction = () => {
+        onCallback();
+    }
+
+    return (
+        <div className={classes.root}>
+            <Box>
+                <Button
+                    variant="contained" style={{ float: 'right', margin: "5px" }}
+                    onClick={(e) => { handleAction }}
+                >{action.icon}{action.label}</Button>
+            </Box>
+        </div>
+    );
+}
+
+MButton.propTypes = {
+    history: PropTypes.object,
+    action: PropTypes.object,
+    onCallback: PropTypes.func
+};
+
+
+
+function MkForm(props) {
     const classes = useStyles();
     const {
         fields = [],
-        updateData = {},
-        isNew = false,
-        currentTabName,
-        onCancel,
-        onCanCreateNew,
+        data = {},
+        onDropdownCreateNew,
         actions = [],
     } = props;
-    const [data, setDataField] = React.useState(updateData != undefined ? updateData : {});
+    const [_data, setDataField] = React.useState(data != undefined ? data : {});
 
     const handleTextString = (e, fieldName) => {
-        setDataField({ ...data, [fieldName]: e.target.value });
+        setDataField({ ..._data, [fieldName]: e.target.value });
     }
 
     const handleTextNumber = (e, fieldName) => {
-        setDataField({ ...data, [fieldName]: e.target.value });
+        setDataField({ ..._data, [fieldName]: e.target.value });
     }
 
     const handleTextMultiline = (e, fieldName) => {
-        setDataField({ ...data, [fieldName]: e.target.value });
+        setDataField({ ..._data, [fieldName]: e.target.value });
     }
 
     const handleDate = (e, fieldName) => {
-        setDataField({ ...data, [fieldName]: e.target.value });
+        setDataField({ ..._data, [fieldName]: e.target.value });
     }
 
     const handleDropDownChange = (e, fieldName) => {
@@ -117,7 +141,7 @@ function FieldList(props) {
 
         var fn = fieldName.split('_');
         var fieldId = fn[0] + '_' + 'id';
-        setDataField({ ...data, [fieldName]: selectedValue, [fieldId]: e.target.value });
+        setDataField({ ..._data, [fieldName]: selectedValue, [fieldId]: e.target.value });
     }
 
     const handleImgUpload = (e, fieldName) => {
@@ -129,28 +153,15 @@ function FieldList(props) {
             setImgPreviewPath(reader.result);
         }
         reader.readAsDataURL(file);
-        setDataField({ ...data, [fieldName]: e.target.files[0].name });
-    }
-
-    const handleCancel = () => {
-        onCancel();
+        setDataField({ ..._data, [fieldName]: e.target.files[0].name });
     }
 
     const handleCanCreateNew = (data) => {
-        onCanCreateNew(data);
+        onDropdownCreateNew(data);
     }
 
     const onChangeValue = (fieldName, value) => {
-        var fn = fieldName.split('_');
-        var fieldId = fn[0] + '_' + 'id';
-        var d = value['name'] != undefined ? value['name'] : value['product_desc']
-
-        if (isNew) {
-            setDataField({ ...data, [fieldName]: d, [fieldId]: value['id'] });
-
-        } else {
-            setDataField({ ...data, [fieldName]: d, [fieldId]: value['id'] });
-        }
+        setDataField({ ..._data, [fieldName]: value });
     }
 
     return (
@@ -160,14 +171,14 @@ function FieldList(props) {
                     {fields.map((f, i) => {
 
                         if (f.type == 'text_string') {
-                            return <Grid key={f.fieldName} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                            return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
                                         <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
                                     </Box>
                                 </Grid>
                                 <Grid item xs={12} sm={7}>
-                                    <TextField id={f.fieldName}
+                                    <TextField id={f.field_name}
                                         variant="outlined"
                                         autoComplete="off"
                                         size={"small"}
@@ -175,14 +186,14 @@ function FieldList(props) {
                                         InputProps={{
                                             readOnly: f.readOnly ? f.readOnly : false,
                                         }}
-                                        value={data != undefined ? data[f.fieldName] : ''}
-                                        onChange={(e) => handleTextString(e, f.fieldName)}
+                                        value={_data != undefined ? _data[f.field_name] : ''}
+                                        onChange={(e) => handleTextString(e, f.field_name)}
                                     />
                                 </Grid>
                             </Grid>;
                         }
                         else if (f.type == 'text_number') {
-                            return <Grid key={f.fieldName} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                            return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
                                         <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
@@ -190,20 +201,20 @@ function FieldList(props) {
                                 </Grid>
                                 <Grid item xs={12} sm={7}>
                                     <TextField
-                                        id={f.fieldName}
+                                        id={f.field_name}
                                         variant="outlined"
                                         autoComplete="off"
                                         size={"small"}
                                         style={{ width: '100%' }}
                                         type="number"
-                                        value={data != undefined ? data[f.fieldName] : ''}
-                                        onChange={(e) => handleTextNumber(e, f.fieldName)}
+                                        value={_data != undefined ? _data[f.field_name] : ''}
+                                        onChange={(e) => handleTextNumber(e, f.field_name)}
                                     />
                                 </Grid>
                             </Grid>;
                         }
                         else if (f.type == 'text_multiline') {
-                            return <Grid key={f.fieldName} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                            return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
                                         <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
@@ -211,21 +222,21 @@ function FieldList(props) {
                                 </Grid>
                                 <Grid item xs={12} sm={7}>
                                     <TextField
-                                        id={f.fieldName}
+                                        id={f.field_name}
                                         multiline
                                         autoComplete="off"
                                         rows={3}
                                         size={"small"}
                                         style={{ width: '100%' }}
-                                        value={data != undefined ? data[f.fieldName] : ''}
+                                        value={_data != undefined ? _data[f.field_name] : ''}
                                         variant="outlined"
-                                        onChange={(e) => handleTextMultiline(e, f.fieldName)}
+                                        onChange={(e) => handleTextMultiline(e, f.field_name)}
                                     />
                                 </Grid>
                             </Grid>;
                         }
                         else if (f.type == 'date') {
-                            return <Grid key={f.fieldName} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                            return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
                                         <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
@@ -233,23 +244,23 @@ function FieldList(props) {
                                 </Grid>
                                 <Grid item xs={12} sm={7}>
                                     <TextField
-                                        id={f.fieldName}
+                                        id={f.field_name}
                                         variant="outlined"
                                         autoComplete="off"
                                         size={"small"}
-                                        value={data != undefined ? data[f.fieldName] : ''}
+                                        value={_data != undefined ? _data[f.field_name] : ''}
                                         type="date"
                                         style={{ width: '100%' }}
-                                        onChange={(e) => handleDate(e, f.fieldName)}
+                                        onChange={(e) => handleDate(e, f.field_name)}
                                     />
                                 </Grid>
                             </Grid>;
                         }
                         else if (f.type == 'dropdown') {
-                            if (f.options != undefined) {
-                                if (f.fieldName == 'priority') {
+                            if (f.options != undefined && f.option_label_field != undefined) {
+                                if (f.field_name == 'priority') {
 
-                                    return <Grid key={f.fieldName} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                    return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                         <Grid item xs={12} sm={5}>
                                             <Box style={{ width: '150px' }}>
                                                 <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
@@ -258,9 +269,9 @@ function FieldList(props) {
                                         <Grid item xs={12} sm={7}>
                                             <NativeSelect
                                                 id="demo-customized-select-native"
-                                                value={data != undefined ? data[f.fieldName] : ''}
-                                                onChange={(e) => handleDropDownChange(e, f.fieldName)}
-                                                id={f.fieldName}
+                                                value={_data != undefined ? _data[f.field_name] : ''}
+                                                onChange={(e) => handleDropDownChange(e, f.field_name)}
+                                                id={f.field_name}
                                                 input={<BootstrapInput />}
                                                 style={{ width: '100%' }}
                                             >
@@ -272,97 +283,66 @@ function FieldList(props) {
                                         </Grid>
                                     </Grid>;
                                 } else {
-                                    var fn = f.fieldName.split('_');
-                                    var fieldId = fn[0] + '_' + 'id';
-
-                                    if (isNew) {
-                                        return <Grid key={f.fieldName} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                            <Grid item xs={12} sm={5}>
-                                                <Box style={{ width: '150px' }}>
-                                                    <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
-                                                </Box>
-                                            </Grid>
-                                            <Grid item xs={12} sm={7}>
-                                                <Autocomplete
-                                                    id="combo-box-demo"
-                                                    options={f.options}
-                                                    getOptionLabel={(option) => {
-                                                        if (typeof option === 'string') {
-                                                            return option;
+                                    return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                        <Grid item xs={12} sm={5}>
+                                            <Box style={{ width: '150px' }}>
+                                                <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
+                                            </Box>
+                                        </Grid>
+                                        <Grid item xs={12} sm={7}>
+                                            <Autocomplete
+                                                id="combo-box-demo"
+                                                options={f.options}
+                                                getOptionLabel={(option) => {
+                                                    if (typeof option === 'string') {
+                                                        return option;
+                                                    }
+                                                    return option[f.option_label_field];
+                                                }}
+                                                style={{ width: '100%' }}
+                                                size='small'
+                                                value={_data != undefined ? _data[f.field_name] ? _data[f.field_name] : " " : " "}
+                                                filterOptions={(options, params) => {
+                                                    console.log("Autocomplete", f.can_create);
+                                                    if (f.can_create) {
+                                                        var newFilter = ['+ Add New']
+                                                        var filtered = filter(options, params);
+                                                        return [...newFilter, ...filtered];
+                                                    } else {
+                                                        var filtered = filter(options, params);
+                                                        return filtered;
+                                                    }
+                                                }}
+                                                onChange={(event, newValue) => {
+                                                    if (typeof newValue === 'string') {
+                                                        console.log('f.field_name', f.field_name, " f.can_create", f.can_create);
+                                                        var d = {
+                                                            "canCreate": f.can_create,
+                                                            "fields": f.fields,
+                                                            "name": f.name,
+                                                            "fieldName": f.field_name
                                                         }
-                                                        return option[f.fieldName] != undefined ? option[f.fieldName] : option.name != undefined ? option.name : option.product_desc != undefined ? option.product_desc : '';
-                                                    }}
-                                                    style={{ width: '100%' }}
-                                                    size='small'
-                                                    value={data != undefined ? data[f.fieldName] ? data[f.fieldName] : " " : " "}
-                                                    filterOptions={(options, params) => {
-                                                        console.log("Autocomplete", f.canCreate);
-                                                        if (f.canCreate) {
-                                                            var newFilter = ['+ Add New']
-                                                            var filtered = filter(options, params);
-                                                            return [...newFilter, ...filtered];
-                                                        } else {
-                                                            var filtered = filter(options, params);
-                                                            return filtered;
+                                                        handleCanCreateNew(d);
+                                                    } else {
+                                                        if (newValue != null && newValue.inputValue != '' && newValue.product_desc != "") {
+                                                            onChangeValue(f.field_name, newValue[f.option_label_field]);
                                                         }
-                                                    }}
-                                                    onChange={(event, newValue) => {
-                                                        if (typeof newValue === 'string') {
-                                                            console.log('f.fieldName', f.fieldName, " f.canCreate", f.canCreate);
-                                                            var d = {
-                                                                "canCreate": f.canCreate,
-                                                                "fields": f.fields,
-                                                                "name": f.name,
-                                                                "fieldName": f.fieldName
-                                                            }
-                                                            handleCanCreateNew(d);
-                                                        } else {
-                                                            if (newValue != null && newValue.inputValue != '' && newValue.product_desc != "") {
-                                                                onChangeValue(f.fieldName, newValue);
-                                                            }
-                                                        }
-                                                    }}
-                                                    renderInput={(params) => <TextField {...params} variant="outlined" />}
+                                                    }
+                                                }}
+                                                renderInput={(params) => <TextField {...params} variant="outlined" />}
 
-                                                />
+                                            />
 
-                                            </Grid>
-                                        </Grid>;
-                                    }
-                                    else {
-                                        return <Grid key={f.fieldName} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                            <Grid item xs={12} sm={5}>
-                                                <Box style={{ width: '150px' }}>
-                                                    <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
-                                                </Box>
-                                            </Grid>
-                                            <Grid item xs={12} sm={7}>
-                                                <NativeSelect
-                                                    id="demo-customized-select-native"
-                                                    value={data != undefined ? data[fieldId] : ''}
-                                                    onChange={(e) => handleDropDownChange(e, f.fieldName)}
-                                                    id={f.fieldName}
-                                                    input={<BootstrapInput />}
-                                                    style={{ width: '100%' }}
-                                                >
-                                                    <option aria-label="None" value="" >Select</option>
-                                                    {f.options.map((d, i) => {
-                                                        var name = d[f.fieldName] != undefined ? d[f.fieldName] : d.name;
-                                                        return <option name={name} value={d.id}>{name}</option>;
-                                                    })}
-                                                </NativeSelect>
-                                            </Grid>
-                                        </Grid>;
-                                    }
-
+                                        </Grid>
+                                    </Grid>;
                                 }
                             }
                         }
                         else if (f.type == 'photo_list') {
-                            console.log('photo_list:', data);
+                            console.log('photo_list:', _data);
                             return <div>
                                 <Grid
-                                    key={f.fieldName} container
+                                    key={f.field_name} container
                                     style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                     <Grid item xs={12} sm={5}>
                                         <Box style={{ width: '150px' }}>
@@ -374,20 +354,20 @@ function FieldList(props) {
                                             <form>
                                                 <div className="form-group">
                                                     <input type="file" name="imgCollection"
-                                                        onChange={(e) => onFileChange(e, f.fieldName)} multiple />
+                                                        onChange={(e) => onFileChange(e, f.field_name)} multiple />
                                                 </div>
                                             </form>
                                         </div>
                                     </Grid>
                                 </Grid>
-                                {data[f.fieldName] != undefined && data[f.fieldName].length != 0 ?
+                                {_data[f.field_name] != undefined && _data[f.field_name].length != 0 ?
                                     <Grid
-                                        key={f.fieldName} container
+                                        key={f.field_name} container
                                         style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                         <Grid item xs={12}>
                                             <div style={{ display: 'block', alignItems: 'center', marginBottom: '10px' }}>
                                                 <GridList className={classes.gridList}>
-                                                    {data[f.fieldName] == undefined ? <span /> : data[f.fieldName].map((tile) => (
+                                                    {_data[f.field_name] == undefined ? <span /> : _data[f.field_name].map((tile) => (
                                                         <GridListTile key={tile} style={{ width: '100px', height: '100px' }}>
                                                             <img src={tile} alt={tile} onClick={(e) => {
                                                                 setSelectedPhoto(tile);
@@ -410,7 +390,7 @@ function FieldList(props) {
                                                     </Grid>
                                                     <br />
                                                     <Grid container spacing={3}>
-                                                        {data[f.fieldName].length > 0 ? data[f.fieldName].map((value) => (
+                                                        {_data[f.field_name].length > 0 ? _data[f.field_name].map((value) => (
                                                             <Grid key={value} item>
                                                                 <Box className="square" > <img src={value} className="thumnail-img" alt="logo" onClick={(e) => setSelectedPhoto(value)} /></Box>
                                                             </Grid>
@@ -424,10 +404,10 @@ function FieldList(props) {
                             </div>;
                         }
                         else if (f.type == 'list') {
-                            console.log('list', data[f.fieldName]);
+                            console.log('list', _data[f.field_name]);
                             return <div>
                                 <Grid
-                                    key={f.fieldName} container
+                                    key={f.field_name} container
                                     style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                     <Grid item xs={12} sm={5}>
                                         <Box style={{ width: '150px' }}>
@@ -443,7 +423,7 @@ function FieldList(props) {
                                     </Grid>
                                 </Grid>
                                 <Grid
-                                    key={f.fieldName} container
+                                    key={f.field_name} container
                                     style={{ display: 'block', alignItems: 'center', marginBottom: '10px' }}>
 
                                     <div style={{ display: 'block', alignItems: 'center', marginBottom: '10px' }}>
@@ -457,7 +437,7 @@ function FieldList(props) {
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
-                                                    {data[f.fieldName].length > 0 ? data[f.fieldName].map((row) => (
+                                                    {_data[f.field_name].length > 0 ? _data[f.field_name].map((row) => (
                                                         <TableRow key={row.name}>
                                                             {partHeaders.map((h, i) => {
                                                                 return (<TableCell key={h.id} align={h.numeric ? 'right' : 'left'}>{row[h.id]}</TableCell>);
@@ -474,7 +454,7 @@ function FieldList(props) {
                             </div>;
                         }
                         else if (f.type == 'time') {
-                            return <Grid key={f.fieldName} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                            return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
                                         <Typography style={{ paddingRight: '30px', color: 'grey' }}>{f.label}</Typography>
@@ -492,7 +472,7 @@ function FieldList(props) {
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    onChange={(e) => handleTime(e, f.fieldName)}
+                                    onChange={(e) => handleTime(e, f.field_name)}
                                 />
                                 </Grid>
                             </Grid>;
@@ -503,42 +483,28 @@ function FieldList(props) {
 
                 {/* display actions buttons */}
                 {actions.length > 0 ?
-                    currentTabName === 'account' ? <Grid item xs={12}>
-                        {data != undefined ?
-                            actions.map((a) => {
-                                if (a.status === data.status) {
-                                    return <MButton action={a} onCallback={a.callback(data)}></MButton>;
-                                }
+                    <Grid item xs={12}>
+                        {actions.map((a) => {
+                            if (a.status === _data.status) {
+                                return <MButton action={a} onCallback={a.callback(_data)}></MButton>;
+                            }
+                        })}
 
-                            })
-                            : <Grid />
-                        }
-                    </Grid>
-                        : <Grid item xs={12}>
-                            {actions.map((a) => {
-                                if (a.status === data.status && currentTabName !== 'account') {
-                                    return <MButton action={a} onCallback={a.callback(data)}></MButton>;
-                                }
-                            })}
-
-                        </Grid>
-                    : <Grid />}
+                    </Grid> : <Grid />}
             </Grid>
         </div>
 
     );
 }
 
-FieldList.propTypes = {
+MkForm.propTypes = {
     history: PropTypes.object,
     fields: PropTypes.array.isRequired,
-    updateData: PropTypes.object,
+    data: PropTypes.object,
     isNew: PropTypes.bool,
-    currentTabName: PropTypes.string,
-    onCancel: PropTypes.func,
     actions: PropTypes.array,
-    onCanCreateNew: PropTypes.func
+    onDropdownCreateNew: PropTypes.func
 };
 
-export default (FieldList);
+export default (MkForm);
 

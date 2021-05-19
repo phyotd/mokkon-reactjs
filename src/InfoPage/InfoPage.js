@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Box, Typography, Button } from '@material-ui/core';
-import { FieldList } from '..';
+import { MkForm } from '..';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -91,22 +91,22 @@ function InfoPage(props) {
             {isNew ?
                 <Grid container style={{ marginTop: '30px' }}>
                     <Grid item xs={12} sm={7}>
-                        <FieldList
+                        <MkForm
                             updateData={infoData}
                             fields={displayFields}
                             isNew={isNew}
                             onDataCallback={(d) => handleUpdateData(d)}
-                        ></FieldList>
+                        ></MkForm>
                     </Grid>
                 </Grid> : <Grid container style={{ marginTop: '30px' }}>
                     <Grid item xs={12} sm={7}>
                         {!editable ?
-                            <FieldList
+                            <MkForm
                                 fields={displayFields}
                                 isNew={isNew}
                                 updateData={infoData}
                                 onDataCallback={(d) => handleUpdateData(d)}
-                            ></FieldList>
+                            ></MkForm>
                             :
                             displayFields.map((d, i) => {
                                 return <Grid container>
