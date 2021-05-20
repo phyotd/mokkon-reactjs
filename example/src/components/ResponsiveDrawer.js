@@ -20,6 +20,7 @@ import MkFormPage from './MkFormPage';
 import { Route, Router, Switch } from 'react-router-dom';
 import WelcomPage from './WelcomPage';
 import { createBrowserHistory } from 'history';
+import MkTablePage from './MkTablePage';
 
 const browserHistory = createBrowserHistory();
 
@@ -154,6 +155,7 @@ function ResponsiveDrawer(props) {
           <Switch>
             <Route path="/" component={WelcomPage} exact />
             <Route path="/MkForm" component={MkFormPage} />
+            <Route path="/MkTable" component={MkTablePage} />
           </Switch>
         </Router>
       </main>
