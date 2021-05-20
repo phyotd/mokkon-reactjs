@@ -13,11 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import { Grid, IconButton } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-// import { connect, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-// import { changePaginatePage, changeRowPerPage, getDataRecords, refreshRecord } from '../actions/app';
-// import RowMenu from './RowMenu';
-// import ConfirmDialog from './ConfirmDialog';
 
 function descendingComparator(a, b, _orderBy) {
     if (b[_orderBy] < a[_orderBy]) {
@@ -57,11 +53,10 @@ const StyledTableCell = withStyles((theme) => ({
 
 
 function EnhancedTableHead(props) {
-    const { classes, _order, _orderBy, onRequestSort, headCells, dispatch, query } = props;
+    const { classes, _order, _orderBy, onRequestSort, headCells } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
-        // dispatch(refreshRecord());
-        // dispatch(getDataRecords(query));
+        // onGetData();
     };
 
     return (
@@ -325,14 +320,14 @@ function MkTable(props) {
         actions,
         query,
         onActions, title,
-        page = 0,
-        rowsPerPage = 10,
+        page,
+        rowsPerPage,
         noMoreToLoad = false,
         order,
         orderBy,
         isLoading = false,
         onChangePaginatePage,
-        onGetData,        
+        onGetData,
         onUpdateDataRow,
         onChangeRowPerPage,
 
@@ -372,22 +367,14 @@ function MkTable(props) {
 
     var offset = _page * _rowsPerPage;
 
-    // useEffect(() => {
-    //     setNoMoreToLoad(selector.noMoreToLoad);
-    //     setPage(selector.page);
-    //     setOrder(selector._order);
-    //     setOrderBy(selector._orderBy);
-    //     setIsLoading(selector.loading);
-    //     setRowsPerPage(selector.rowsPerPage);
-    // }, [selector]);
-
-    // useEffect(() => {
-    //     var rowsPerPage = localStorage.getItem('rowPerPage');
-    //     if (rowsPerPage !== null) {
-    //         setRowsPerPage(parseInt(rowsPerPage));
-    //         // dispatch(changeRowPerPage(parseInt(rowsPerPage)));
-    //     }
-    // }, [dispatch]);
+    useEffect(() => {
+        setNoMoreToLoad(noMoreToLoad);
+        setPage(page);
+        setOrder(order);
+        setOrderBy(orderBy);
+        setIsLoading(isLoading);
+        setRowsPerPage(rowsPerPage);
+    }, []);
 
     const handleRequestSort = (event, property) => {
         const isAsc = _orderBy === property && _order === 'asc';
@@ -397,19 +384,15 @@ function MkTable(props) {
 
     const handleChangePage = (event, newPage) => {
         if (!noMoreToLoad && (newPage + 1) * _rowsPerPage >= data.length) {
-            // dispatch(getDataRecords(query));
             onGetData();
         }
-        // dispatch(changePaginatePage(newPage));
+        setPage(newPage);
         onChangePaginatePage(newPage);
     };
 
     const handleChangeRowsPerPage = (event) => {
-        localStorage.setItem("rowPerPage", parseInt(event.target.value));
-        // dispatch(changeRowPerPage(parseInt(localStorage.getItem('rowPerPage'))));
-        // dispatch(refreshRecord());
-        // dispatch(getDataRecords(query));
-        onChangeRowPerPage(parseInt(localStorage.getItem('rowPerPage')));
+        setRowsPerPage(parseInt(event.target.value));
+        onChangeRowPerPage(parseInt(event.target.value));
     };
 
     const getStatus = (data, header) => {
@@ -424,10 +407,6 @@ function MkTable(props) {
         }
         return (<TableCell key={header.id} align={header.numeric ? 'right' : 'left'} ><Typography style={{ color: 'red', fontWeight: '500' }}>{data[header.id]}</Typography></TableCell>);
     };
-
-    // const isSelected = (name) => selected.indexOf(name) !== -1;
-
-    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
@@ -448,7 +427,6 @@ function MkTable(props) {
                                 onRequestSort={handleRequestSort}
                                 rowCount={data.length !== undefined ? data.length : 0}
                                 dispatch={dispatch}
-                                query={query}
                             />
 
                             <TableBody>
@@ -537,8 +515,6 @@ MkTable.propTypes = {
     orderBy: PropTypes.any,
     rowsPerPage: PropTypes.any,
     noMoreToLoad: PropTypes.any,
-    order: PropTypes.any,
-    orderBy: PropTypes.any,
     isLoading: PropTypes.any,
     onChangePaginatePage: PropTypes.any,
     onGetData: PropTypes.any,
