@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
     Box,
-    Button
+    Grid,
+    Typography,
+    NativeSelect
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -26,17 +28,16 @@ function MDropdown(props) {
                 </Grid>
                 <Grid item xs={12} sm={7}>
                     <NativeSelect
-                        id="demo-customized-select-native"
-                        value={data != undefined ? data[fieldId] : ''}
+                        // value={data !== undefined ? data[fieldId] : ''}
                         // onChange={(e) => handleDropDownChange(e, field.fieldName)}
                         id={field.fieldName}
-                        input={<BootstrapInput />}
+                        // input={<BootstrapInput />}
                         style={{ width: '100%' }}
                     >
                         <option aria-label="None" value="" >Select</option>
                         {field.options.map((d, i) => {
-                            var name = d[field.fieldName] != undefined ? d[field.fieldName] : d.name;
-                            return <option name={name} value={d.id}>{name}</option>;
+                            var name = d[field.fieldName] !== undefined ? d[field.fieldName] : d.name;
+                            return (<option name={name} value={d.id} key={d.id}>{name}</option>);
                         })}
                     </NativeSelect>
                 </Grid>

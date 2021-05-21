@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Box, Typography, Button } from '@material-ui/core';
-import { MkForm } from '..';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
         }
     }, button: {
         color: 'white',
-        color: theme.palette.primary.main,
         width: 150,
         height: 55
     },
@@ -50,11 +48,6 @@ const useStyles = makeStyles((theme) => ({
         float: "left",
         color: theme.palette.primary.main,
         fontWeight: "bold"
-    },
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
     },
 }));
 
@@ -73,17 +66,17 @@ function MkInfo(props) {
         currentTabName,
         actions } = props;
 
-    const [editable, setEditable] = React.useState(isEditable != undefined ? isEditable : true);
-    const [data, setData] = React.useState({});
+    const [editable, setEditable] = React.useState(isEditable !== undefined ? isEditable : true);
+    // const [data, setData] = React.useState({});
 
     const handleEdit = () => {
         setEditable(false)
     }
 
-    const handleUpdateData = (data) => {
-        console.log('handle update date:', data);
-        setData(data);
-    }
+    // const handleUpdateData = (data) => {
+    //     console.log('handle update date:', data);
+    //     setData(data);
+    // }
 
 
     return (
@@ -91,25 +84,26 @@ function MkInfo(props) {
             {isNew ?
                 <Grid container style={{ marginTop: '30px' }}>
                     <Grid item xs={12} sm={7}>
-                        <MkForm
+                        {/* <MkForm
                             updateData={infoData}
                             fields={displayFields}
                             isNew={isNew}
                             onDataCallback={(d) => handleUpdateData(d)}
-                        ></MkForm>
+                        ></MkForm> */}
                     </Grid>
                 </Grid> : <Grid container style={{ marginTop: '30px' }}>
                     <Grid item xs={12} sm={7}>
                         {!editable ?
-                            <MkForm
-                                fields={displayFields}
-                                isNew={isNew}
-                                updateData={infoData}
-                                onDataCallback={(d) => handleUpdateData(d)}
-                            ></MkForm>
+                            // <MkForm
+                            //     fields={displayFields}
+                            //     isNew={isNew}
+                            //     updateData={infoData}
+                            //     onDataCallback={(d) => handleUpdateData(d)}
+                            // ></MkForm>
+                            <div/>
                             :
                             displayFields.map((d, i) => {
-                                return <Grid container>
+                                return (<Grid container key={i}>
                                     <Grid item xs={12} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                         <Grid item xs={12} sm={5}>
                                             <Box style={{ width: '250px' }}>
@@ -117,11 +111,14 @@ function MkInfo(props) {
                                             </Box>
                                         </Grid>
                                         <Grid item xs={12} sm={7}>
-                                            {d.type == 'photo' ? <img src={infoData['photo_url']} style={{ width: '120px', height: '120px', border: '1px solid grey' }}></img> :
-                                                <Typography style={{ paddingRight: '30px' }}>{infoData != undefined ? getDataString(infoData, d.fieldName) : ''}</Typography>}
+                                            {d.type === 'photo' ? 
+                                            <img/>
+                                            // <img src={infoData['photo_url']} style={{ width: '120px', height: '120px', border: '1px solid grey' }}></img>
+                                             :
+                                                <Typography style={{ paddingRight: '30px' }}>{infoData !== undefined ? getDataString(infoData, d.fieldName) : ''}</Typography>}
                                         </Grid>
                                     </Grid>
-                                </Grid>;
+                                </Grid>);
                             })}
                     </Grid>
                     <Grid item xs={12} sm={7}>
@@ -132,29 +129,29 @@ function MkInfo(props) {
 
                             {actions.map((a, i) => {
 
-                                if (currentTabName == 'account') {
-                                    if (infoData.status == 'invited') {
+                                if (currentTabName === 'account') {
+                                    if (infoData.status === 'invited') {
                                         return <Box>
                                             <Button style={{ color: 'white', backgroundColor: 'grey', float: 'right', marginLeft: '10px' }}
-                                                onClick={() => a.callback(data)}
+                                                // onClick={() => a.callback(data)}
                                             >{a.label}</Button>
                                         </Box>;
                                     }
-                                    if (infoData.status == 'joined') {
+                                    if (infoData.status === 'joined') {
                                         return <Box>
                                             <Button style={{ color: 'white', backgroundColor: 'grey', float: 'right', marginLeft: '10px' }}
-                                                onClick={() => a.callback(data)}
+                                                // onClick={() => a.callback(data)}
                                             >{a.label}</Button>
                                         </Box>;
                                     }
-                                    if (infoData.status == 'disabled') {
+                                    if (infoData.status === 'disabled') {
                                         return <Box>
                                             <Button style={{ color: 'white', backgroundColor: 'grey', float: 'right', marginLeft: '10px' }}
-                                                onClick={() => a.callback(data)}
+                                                // onClick={() => a.callback(data)}
                                             >{a.label}</Button>
                                         </Box>;
                                     }
-                                    if (infoData.status == 'requested') {
+                                    if (infoData.status === 'requested') {
                                         if (editable) {
                                             return <Box>
                                                 <Button style={{ marginLeft: '10px' }}
@@ -164,7 +161,7 @@ function MkInfo(props) {
                                         } else {
                                             return <Box>
                                                 <Button style={{ color: 'white', backgroundColor: 'grey', float: 'right', marginLeft: '10px' }}
-                                                    onClick={() => a.callback(data)}
+                                                    // onClick={() => a.callback(data)}
                                                 >{a.label}</Button>
                                             </Box>;
                                         }
@@ -172,7 +169,7 @@ function MkInfo(props) {
                                     }
                                 } else {
                                     if (editable) {
-                                        if (a.action_type == 'edit') {
+                                        if (a.action_type === 'edit') {
                                             console.log('type: ', a.action_type, 'editable: ', editable);
 
                                             return <Box>
@@ -181,25 +178,25 @@ function MkInfo(props) {
                                                 >{a.icon}{a.label}</Button>
                                             </Box>
                                         }
-                                        if (a.action_type == 'delete') {
+                                        if (a.action_type === 'delete') {
                                             return <Box>
                                                 <Button style={{ float: 'right', marginLeft: '10px' }}
-                                                    onClick={() => a.callback(data)}
+                                                    // onClick={() => a.callback(data)}
                                                 >{a.icon}{a.label}</Button>
                                             </Box>
                                         }
                                     } else {
-                                        if (a.action_type == 'save') {
+                                        if (a.action_type === 'save') {
                                             return <Box>
                                                 <Button style={{ marginLeft: '10px' }}
-                                                    onClick={() => a.callback(data)}
+                                                    // onClick={() => a.callback(data)}
                                                 >{a.icon}{a.label}</Button>
                                             </Box>
                                         }
-                                        if (a.action_type == 'cancel') {
+                                        if (a.action_type === 'cancel') {
                                             return <Box>
                                                 <Button style={{ float: 'right', marginLeft: '10px' }}
-                                                    onClick={() => a.callback(data)}
+                                                    // onClick={() => a.callback(data)}
                                                 >{a.icon}{a.label}</Button>
                                             </Box>
                                         }

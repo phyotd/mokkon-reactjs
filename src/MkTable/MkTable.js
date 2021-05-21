@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,9 +10,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
-import { Grid, IconButton } from '@material-ui/core';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import { Box, Button, Dialog, DialogActions, DialogTitle, Grid, IconButton, Menu, MenuItem } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 function descendingComparator(a, b, _orderBy) {
     if (b[_orderBy] < a[_orderBy]) {
@@ -85,7 +85,7 @@ function EnhancedTableHead(props) {
                                 ) : null}
                             </TableSortLabel>
                             : <TableSortLabel
-                                hideSortIcon={true}
+                                hideSortIcon="true"
                                 align="right"
                             >
                                 {headCell.label}
@@ -95,7 +95,7 @@ function EnhancedTableHead(props) {
 
                     </StyledTableCell>
                 ))}
-                <StyledTableCell style={{ width: '150px' }} />
+                <StyledTableCell style={{ width: '100px' }} />
 
             </TableRow>
         </TableHead>
@@ -158,12 +158,12 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 function getUpdatedDate(p) {
-    var statusDate = p['updated_date'];
+    var statusDate = p.updated_date;
     var day = '';
     if (statusDate !== undefined) {
         var convertDate = new Date(statusDate.toDate());
         var dd = String(convertDate.getDate()).padStart(2, '0');
-        var mm = String(convertDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var mm = String(convertDate.getMonth() + 1).padStart(2, '0');
         var yyyy = convertDate.getFullYear();
 
         day = mm + '/' + dd + '/' + yyyy;
@@ -191,7 +191,7 @@ export const formatDateToLocal = (date, withTime = true) => {
 }
 
 function RowMenu(props) {
-    const { row, actions, onSelectedAction, showEdit = false, onRowEdit } = props;
+    const { row, actions, onSelectedAction, onRowEdit } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleMenuClick = (event) => {
@@ -216,7 +216,7 @@ function RowMenu(props) {
     }
 
     return (
-        <>
+        <div>
             <Menu
                 id={`actions-${row.id}`}
                 anchorEl={anchorEl}
@@ -233,29 +233,36 @@ function RowMenu(props) {
                 }
                 )}
             </Menu>
-            <Grid style={{ display: 'flex' }}>
+            <Grid
+                container
+                direction="row"
+                justify="flex-end"
+                alignItems="center"
+                style={{ display: 'flex' }}>
                 <IconButton
                     id={`edit-${row.id}`}
                     aria-label="more"
                     aria-controls="long-menu"
                     aria-haspopup="true"
                     onClick={handleEdit}
+                    size="small"
                 >
                     <EditIcon />
                 </IconButton>
-
+                <Box style={{ width: '10px' }} />
                 <IconButton
                     id={`dropdown-${row.id}`}
                     aria-label="more"
                     aria-controls="long-menu"
                     aria-haspopup="true"
+                    size="small"
                     onClick={handleMenuClick}
                 >
                     <ExpandMore />
                 </IconButton>
             </Grid>
 
-        </>
+        </div>
     );
 }
 
@@ -263,7 +270,6 @@ RowMenu.propTypes = {
     row: PropTypes.object.isRequired,
     actions: PropTypes.array.isRequired,
     onSelectedAction: PropTypes.func.isRequired,
-    showEdit: PropTypes.bool,
     onRowEdit: PropTypes.func
 }
 
@@ -293,10 +299,10 @@ function ConfirmDialog(props) {
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
-            </Button>
+                    </Button>
                     <Button onClick={handleContinue} color="primary" autoFocus>
                         Delete
-            </Button>
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>
@@ -318,7 +324,6 @@ function MkTable(props) {
         data = [],
         headers = [],
         actions,
-        query,
         onActions, title,
         page,
         rowsPerPage,
@@ -330,7 +335,7 @@ function MkTable(props) {
         onGetData,
         onUpdateDataRow,
         onChangeRowPerPage,
-
+        dense = true
     } = props;
 
     const [_rowsPerPage, setRowsPerPage] = React.useState(rowsPerPage);
@@ -340,6 +345,10 @@ function MkTable(props) {
     const [_orderBy, setOrderBy] = React.useState(orderBy);
     const [_isLoading, setIsLoading] = React.useState(isLoading);
     const [_isConfirm, setIsConfirm] = React.useState(false);
+    const [itemName, setItemName] = React.useState('');
+    const [row, setRow] = React.useState({});
+    const [action, setAction] = React.useState('');
+    const [_dense, setDense] = React.useState(dense);
 
     const handleSelectMenu = (row, action) => {
         if (action === 'delete') {
@@ -374,6 +383,7 @@ function MkTable(props) {
         setOrderBy(orderBy);
         setIsLoading(isLoading);
         setRowsPerPage(rowsPerPage);
+        setDense(dense);
     }, []);
 
     const handleRequestSort = (event, property) => {
@@ -383,7 +393,7 @@ function MkTable(props) {
     };
 
     const handleChangePage = (event, newPage) => {
-        if (!noMoreToLoad && (newPage + 1) * _rowsPerPage >= data.length) {
+        if (!_noMoreToLoad && (newPage + 1) * _rowsPerPage >= data.length) {
             onGetData();
         }
         setPage(newPage);
@@ -397,18 +407,19 @@ function MkTable(props) {
 
     const getStatus = (data, header) => {
         var v = data[header.id];
-        var color = 'red';
-        if (v == 'Pending') {
-            color = 'red';
-        } else if (v == 'Started') {
-            color = 'orange';
+        var _color = 'red';
+        if (v === 'Pending') {
+            _color = 'red';
+        } else if (v === 'Started') {
+            _color = 'orange';
         } else {
-            color = 'green';
+            _color = 'green';
         }
-        return (<TableCell key={header.id} align={header.numeric ? 'right' : 'left'} ><Typography style={{ color: 'red', fontWeight: '500' }}>{data[header.id]}</Typography></TableCell>);
+        return (<TableCell key={header.id} align={header.numeric ? 'right' : 'left'} ><Typography style={{ color: _color, fontWeight: '500' }}>{data[header.id]}</Typography></TableCell>);
     };
 
     return (
+
         <div className={classes.root}>
             <Grid container>
                 <Grid item>
@@ -416,7 +427,7 @@ function MkTable(props) {
                         <Table
                             className={classes.table}
                             aria-labelledby="tableTitle"
-                            size='small'
+                            size={_dense ? 'small' : 'medium'}
                             aria-label="enhanced table"
                         >
                             <EnhancedTableHead
@@ -430,7 +441,7 @@ function MkTable(props) {
                             />
 
                             <TableBody>
-                                {isLoading ? <StyledTableRow >
+                                {_isLoading ? <StyledTableRow >
                                     <TableCell colSpan={headers.length} align="center"> <CircularProgress /></TableCell>
                                 </StyledTableRow> :
                                     (data.length !== 0 ? stableSort(data, getComparator(_order, _orderBy))
@@ -454,36 +465,35 @@ function MkTable(props) {
                                                             return (<TableCell key={h.id} align={h.numeric ? 'right' : 'left'}>{row[h.id]}</TableCell>);
                                                         }
                                                         if (h.id === 'updated_date') {
-                                                            return (<TableCell key={h.id} align={h.numeric ? 'right' : 'left'} style={{ width: h.width }}>{getUpdatedDate(row)}</TableCell>);
+                                                            return (<TableCell key={h.id} align={h.numeric ? 'right' : 'left'} style={{ width: h.width ? h.width : null }}>{getUpdatedDate(row)}</TableCell>);
                                                         } else {
-                                                            return (<TableCell key={h.id} align={h.numeric ? 'right' : 'left'} style={{ width: h.width }}
+                                                            return (<TableCell key={h.id} align={h.numeric ? 'right' : 'left'} style={{ width: h.width ? h.width : null }}
                                                             >{row[h.id]}</TableCell>);
                                                         }
                                                     })}
                                                     {actions ?
-                                                        <TableCell style={{ width: '150px' }}>
+                                                        <TableCell style={{ width: '150px' }} align='right'>
                                                             <RowMenu
                                                                 actions={actions}
                                                                 row={row}
-                                                                showEdit={true}
                                                                 onRowEdit={(data) => handleRowEdit(data)}
                                                                 onSelectedAction={(data, actionName) => handleSelectMenu(data, actionName)}
                                                             />
                                                         </TableCell>
-                                                        : <TableCell style={{ width: '150px' }}>
-                                                            <IconButton onClick={(event) => handleRowEdit(row)}><EditIcon /></IconButton>
+                                                        : <TableCell style={{ width: '150px' }} align='right'>
+                                                            <IconButton onClick={(event) => handleRowEdit(row)} size={dense ? "small" : "medium"}><EditIcon /></IconButton>
                                                         </TableCell>}
                                                 </StyledTableRow>
 
                                             );
-                                        }) : <StyledTableRow style={{ width: '100%' }}></StyledTableRow>)}
+                                        }) : <StyledTableRow style={{ width: '100%' }} />)}
                             </TableBody>
                         </Table>
                     </TableContainer>
 
                     <TablePagination
                         rowsPerPageOptions={[10, 30, 50]}
-                        labelDisplayedRows={function ({ from, to, count }) { }}
+                        labelDisplayedRows={({ from, to, count }) => { console.log(from, to, count) }}
                         component="div"
                         count={data.length}
                         rowsPerPage={_rowsPerPage}
@@ -497,7 +507,7 @@ function MkTable(props) {
                 itemName={itemName}
                 openDialog={_isConfirm}
                 onCancel={(v) => handleCancel(v)}
-                onContinue={(v) => handleDelete(v)}></ConfirmDialog> : <div />}
+                onContinue={(v) => handleDelete(v)} /> : <div />}
         </div>
     );
 }
@@ -518,7 +528,8 @@ MkTable.propTypes = {
     isLoading: PropTypes.any,
     onChangePaginatePage: PropTypes.any,
     onGetData: PropTypes.any,
-    onChangeRowPerPage: PropTypes.any
+    onChangeRowPerPage: PropTypes.any,
+    dense: PropTypes.any
 };
 
 export default (MkTable);

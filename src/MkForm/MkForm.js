@@ -7,8 +7,20 @@ import {
     Button,
     NativeSelect,
     Box,
-    Typography
+    Typography,
+    GridList,
+    GridListTile,
+    TableContainer,
+    Table,
+    TableHead,
+    TableRow,
+    TableBody,
+    TableCell,
+    Dialog,
+    DialogTitle,
+    DialogContent,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 
@@ -85,8 +97,9 @@ function MButton(props) {
     const classes = useStyles();
     const { action, onCallback } = props;
 
-    const handleAction = () => {
-        onCallback();
+    const handleAction = (e) => {
+        e.preventDefault();
+        onCallback(e);
     }
 
     return (
@@ -94,7 +107,7 @@ function MButton(props) {
             <Box>
                 <Button
                     variant="contained" style={{ float: 'right', margin: "5px" }}
-                    onClick={(e) => { handleAction }}
+                    onClick={(e) => handleAction(e)}
                 >{action.icon}{action.label}</Button>
             </Box>
         </div>
@@ -103,8 +116,8 @@ function MButton(props) {
 
 MButton.propTypes = {
     history: PropTypes.object,
-    action: PropTypes.object,
-    onCallback: PropTypes.func
+    action: PropTypes.object.isRequired,
+    onCallback: PropTypes.func.isRequired
 };
 
 
@@ -116,8 +129,12 @@ function MkForm(props) {
         data = {},
         onDropdownCreateNew,
         actions = [],
+        partHeaders
     } = props;
-    const [_data, setDataField] = React.useState(data != undefined ? data : {});
+    const [_data, setDataField] = React.useState(data !== undefined ? data : {});
+    const [open, setOpen] = React.useState(false);
+    // const [imgCollection, setImageCollection] = React.useState([]);
+    const [selectedPhoto, setSelectedPhoto] = React.useState("#");
 
     const handleTextString = (e, fieldName) => {
         setDataField({ ..._data, [fieldName]: e.target.value });
@@ -144,17 +161,17 @@ function MkForm(props) {
         setDataField({ ..._data, [fieldName]: selectedValue, [fieldId]: e.target.value });
     }
 
-    const handleImgUpload = (e, fieldName) => {
-        e.preventDefault();
-        let reader = new FileReader();
-        let file = e.target.files[0];
+    // const handleImgUpload = (e, fieldName) => {
+    //     e.preventDefault();
+    //     let reader = new FileReader();
+    //     let file = e.target.files[0];
 
-        reader.onloadend = () => {
-            setImgPreviewPath(reader.result);
-        }
-        reader.readAsDataURL(file);
-        setDataField({ ..._data, [fieldName]: e.target.files[0].name });
-    }
+    //     reader.onloadend = () => {
+    //         setImgPreviewPath(reader.result);
+    //     }
+    //     reader.readAsDataURL(file);
+    //     setDataField({ ..._data, [fieldName]: e.target.files[0].name });
+    // }
 
     const handleCanCreateNew = (data) => {
         onDropdownCreateNew(data);
@@ -164,13 +181,21 @@ function MkForm(props) {
         setDataField({ ..._data, [fieldName]: value });
     }
 
+    const onFileChange = (e, f) => {
+
+    }
+
+    const handleSelectItemDialog = () => {
+
+    }
+
     return (
         <div className={classes.root}>
             <Grid container>
                 <Grid item xs={12}>
                     {fields.map((f, i) => {
 
-                        if (f.type == 'text_string') {
+                        if (f.type === 'text_string') {
                             return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
@@ -181,18 +206,18 @@ function MkForm(props) {
                                     <TextField id={f.field_name}
                                         variant="outlined"
                                         autoComplete="off"
-                                        size={"small"}
+                                        size="small"
                                         style={{ width: '100%' }}
                                         InputProps={{
                                             readOnly: f.readOnly ? f.readOnly : false,
                                         }}
-                                        value={_data != undefined ? _data[f.field_name] : ''}
+                                        value={_data !== undefined ? _data[f.field_name] : ''}
                                         onChange={(e) => handleTextString(e, f.field_name)}
                                     />
                                 </Grid>
                             </Grid>;
                         }
-                        else if (f.type == 'text_number') {
+                        else if (f.type === 'text_number') {
                             return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
@@ -204,16 +229,16 @@ function MkForm(props) {
                                         id={f.field_name}
                                         variant="outlined"
                                         autoComplete="off"
-                                        size={"small"}
+                                        size="small"
                                         style={{ width: '100%' }}
                                         type="number"
-                                        value={_data != undefined ? _data[f.field_name] : ''}
+                                        value={_data !== undefined ? _data[f.field_name] : ''}
                                         onChange={(e) => handleTextNumber(e, f.field_name)}
                                     />
                                 </Grid>
                             </Grid>;
                         }
-                        else if (f.type == 'text_multiline') {
+                        else if (f.type === 'text_multiline') {
                             return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
@@ -226,16 +251,16 @@ function MkForm(props) {
                                         multiline
                                         autoComplete="off"
                                         rows={3}
-                                        size={"small"}
+                                        size="small"
                                         style={{ width: '100%' }}
-                                        value={_data != undefined ? _data[f.field_name] : ''}
+                                        value={_data !== undefined ? _data[f.field_name] : ''}
                                         variant="outlined"
                                         onChange={(e) => handleTextMultiline(e, f.field_name)}
                                     />
                                 </Grid>
                             </Grid>;
                         }
-                        else if (f.type == 'date') {
+                        else if (f.type === 'date') {
                             return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
@@ -247,8 +272,8 @@ function MkForm(props) {
                                         id={f.field_name}
                                         variant="outlined"
                                         autoComplete="off"
-                                        size={"small"}
-                                        value={_data != undefined ? _data[f.field_name] : ''}
+                                        size="small"
+                                        value={_data !== undefined ? _data[f.field_name] : ''}
                                         type="date"
                                         style={{ width: '100%' }}
                                         onChange={(e) => handleDate(e, f.field_name)}
@@ -256,9 +281,9 @@ function MkForm(props) {
                                 </Grid>
                             </Grid>;
                         }
-                        else if (f.type == 'dropdown') {
-                            if (f.options != undefined && f.option_label_field != undefined) {
-                                if (f.field_name == 'priority') {
+                        else if (f.type === 'dropdown') {
+                            if (f.options !== undefined && f.option_label_field !== undefined) {
+                                if (f.field_name === 'priority') {
 
                                     return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                         <Grid item xs={12} sm={5}>
@@ -268,8 +293,7 @@ function MkForm(props) {
                                         </Grid>
                                         <Grid item xs={12} sm={7}>
                                             <NativeSelect
-                                                id="demo-customized-select-native"
-                                                value={_data != undefined ? _data[f.field_name] : ''}
+                                                value={_data !== undefined ? _data[f.field_name] : ''}
                                                 onChange={(e) => handleDropDownChange(e, f.field_name)}
                                                 id={f.field_name}
                                                 input={<BootstrapInput />}
@@ -277,7 +301,7 @@ function MkForm(props) {
                                             >
                                                 <option aria-label="None" value="" >Select</option>
                                                 {f.options.map((d, i) => {
-                                                    return <option name={d.name} value={d.id}>{d.name}</option>;
+                                                    return (<option name={d.name} value={d.id} key={d.id}>{d.name}</option>);
                                                 })}
                                             </NativeSelect>
                                         </Grid>
@@ -301,7 +325,7 @@ function MkForm(props) {
                                                 }}
                                                 style={{ width: '100%' }}
                                                 size='small'
-                                                value={_data != undefined ? _data[f.field_name] ? _data[f.field_name] : " " : " "}
+                                                value={_data !== undefined ? _data[f.field_name] ? _data[f.field_name] : " " : " "}
                                                 filterOptions={(options, params) => {
                                                     console.log("Autocomplete", f.can_create);
                                                     if (f.can_create) {
@@ -309,8 +333,8 @@ function MkForm(props) {
                                                         var filtered = filter(options, params);
                                                         return [...newFilter, ...filtered];
                                                     } else {
-                                                        var filtered = filter(options, params);
-                                                        return filtered;
+                                                        var _filtered = filter(options, params);
+                                                        return _filtered;
                                                     }
                                                 }}
                                                 onChange={(event, newValue) => {
@@ -324,7 +348,7 @@ function MkForm(props) {
                                                         }
                                                         handleCanCreateNew(d);
                                                     } else {
-                                                        if (newValue != null && newValue.inputValue != '' && newValue.product_desc != "") {
+                                                        if (newValue != null && newValue.inputValue !== '' && newValue.product_desc !== "") {
                                                             onChangeValue(f.field_name, newValue[f.option_label_field]);
                                                         }
                                                     }
@@ -338,7 +362,7 @@ function MkForm(props) {
                                 }
                             }
                         }
-                        else if (f.type == 'photo_list') {
+                        else if (f.type === 'photo_list') {
                             console.log('photo_list:', _data);
                             return <div>
                                 <Grid
@@ -354,23 +378,24 @@ function MkForm(props) {
                                             <form>
                                                 <div className="form-group">
                                                     <input type="file" name="imgCollection"
-                                                        onChange={(e) => onFileChange(e, f.field_name)} multiple />
+                                                        onChange={(e) => onFileChange(e, f.field_name)}
+                                                        multiple />
                                                 </div>
                                             </form>
                                         </div>
                                     </Grid>
                                 </Grid>
-                                {_data[f.field_name] != undefined && _data[f.field_name].length != 0 ?
+                                {_data[f.field_name] !== undefined && _data[f.field_name].length !== 0 ?
                                     <Grid
                                         key={f.field_name} container
                                         style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                         <Grid item xs={12}>
                                             <div style={{ display: 'block', alignItems: 'center', marginBottom: '10px' }}>
                                                 <GridList className={classes.gridList}>
-                                                    {_data[f.field_name] == undefined ? <span /> : _data[f.field_name].map((tile) => (
+                                                    {_data[f.field_name] === undefined ? <span /> : _data[f.field_name].map((tile) => (
                                                         <GridListTile key={tile} style={{ width: '100px', height: '100px' }}>
                                                             <img src={tile} alt={tile} onClick={(e) => {
-                                                                setSelectedPhoto(tile);
+                                                                // setSelectedPhoto(tile);
                                                                 setOpen(true);
                                                             }
                                                             } />
@@ -400,10 +425,10 @@ function MkForm(props) {
                                             </DialogContent>
                                         </Dialog>
                                     </Grid>
-                                    : <Grid></Grid>}
+                                    : <Grid />}
                             </div>;
                         }
-                        else if (f.type == 'list') {
+                        else if (f.type === 'list') {
                             console.log('list', _data[f.field_name]);
                             return <div>
                                 <Grid
@@ -453,7 +478,7 @@ function MkForm(props) {
                                 </Grid>
                             </div>;
                         }
-                        else if (f.type == 'time') {
+                        else if (f.type === 'time') {
                             return <Grid key={f.field_name} container style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Grid item xs={12} sm={5}>
                                     <Box style={{ width: '150px' }}>
@@ -472,7 +497,7 @@ function MkForm(props) {
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    onChange={(e) => handleTime(e, f.field_name)}
+                                // onChange={(e) => handleTime(e, f.field_name)}
                                 />
                                 </Grid>
                             </Grid>;
@@ -486,7 +511,7 @@ function MkForm(props) {
                     <Grid item xs={12}>
                         {actions.map((a) => {
                             if (a.status === _data.status) {
-                                return <MButton action={a} onCallback={a.callback(_data)}></MButton>;
+                                return <MButton action={a} onCallback={(event) => a.callback(event, _data)} />;
                             }
                         })}
 
