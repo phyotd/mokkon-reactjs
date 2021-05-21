@@ -1,6 +1,8 @@
 import React from 'react'
 import { MkTable } from '@mokkon/reactjs'
 import '@mokkon/reactjs/dist/index.css';
+import { Grid } from '@material-ui/core';
+import theme from '../theme';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -26,52 +28,12 @@ const MkTablePage = (props) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const data = {
-    delete_time: 0,
-    name: "Vendor 13",
-    address: "address",
-    id: 'qwerty',
-    update_time: 1610341578878,
-    updated_by: "Nine Nine",
-    updated_by_id: "kShMtHkcwTNjwm-lfzSBvAzdSo1J8dIpAz6_Ct85HPg",
-    // status: 'joined'
-  }
-
-  const _data = {
-    delete_time: 0,
-    id: 'asdfg',
-    name: "Vendor",
-    address: "address",
-    update_time: 1610341578878,
-    updated_by: "Nine Nine",
-    updated_by_id: "kShMtHkcwTNjwm-lfzSBvAzdSo1J8dIpAz6_Ct85HPg",
-    // status: 'joined'
-  }
-
   const headCells = [
-    { id: 'sr', numeric: true, disablePadding: false, label: 'No.', width: '15px' },
-    { id: 'name', numeric: false, disablePadding: false, label: 'Name', width: '15px' },
+    { id: 'sr', numeric: true, disablePadding: false, label: 'No.' },
+    { id: 'name', numeric: false, disablePadding: false, label: 'Name', width: '200px' },
   ];
 
-  const handleUpdate = (data) => {
-    console.log('update data :', data);
-  }
-
-  const handleDelete = (e, data) => {
-    console.log('delete data :', data);
-  }
-
-  const handleSave = (e, data) => {
-    console.log('save data :', data);
-  }
-
-  const handleCancel = (e, data) => {
-    console.log('cancel data :', data);
-  }
-
-  const handleOnActions = (data) => {
-    console.log('handleOnActions :', data);
-  }
+  var actions = [{ "action_name": "delete", "display_name": "Delete", }];
 
   const handleChangePaginatePage = (v) => {
     setPage(v);
@@ -83,25 +45,30 @@ const MkTablePage = (props) => {
     console.log('handleRowPerPage :', v);
   }
 
-  return <div>
+  return (
     <div className="root">
       {/*table template */}
-      <div className="listContainer">
-        <MkTable
-          headers={headCells}
-          data={rows}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          order={'asc'}
-          orderBy={'name'}
-          noMoreToLoad= {true}
-          onUpdateDataRow={(d) => { console.log('onUpdateDataRow: ', d) }}
-          onChangePaginatePage={(newPage) => { handleChangePaginatePage(newPage) }}
-          onGetData={() => { }}
-          onChangeRowPerPage={(rowPerPage) => { handleRowPerPage(rowPerPage) }}
-        ></MkTable>
-      </div>
-    </div>  </div>
+      <Grid container>
+        <Grid item xs={8}>
+          <MkTable
+            theme={theme}
+            headers={headCells}
+            data={rows}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            order={'asc'}
+            orderBy={'name'}
+            actions={actions}
+            noMoreToLoad={true}
+            onUpdateDataRow={(d) => { console.log('onUpdateDataRow: ', d) }}
+            onChangePaginatePage={(newPage) => { handleChangePaginatePage(newPage) }}
+            onGetData={() => { }}
+            onChangeRowPerPage={(rowPerPage) => { handleRowPerPage(rowPerPage) }}
+          ></MkTable>
+        </Grid>
+
+      </Grid>
+    </div>);
 }
 
 export default (MkTablePage);

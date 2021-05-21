@@ -3,19 +3,21 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var React = require('react');
 var React__default = _interopDefault(React);
 var core = require('@material-ui/core');
+var AddIcon = _interopDefault(require('@material-ui/icons/Add'));
 var styles = require('@material-ui/core/styles');
 var Autocomplete = require('@material-ui/lab/Autocomplete');
 var Autocomplete__default = _interopDefault(Autocomplete);
-var Table$1 = _interopDefault(require('@material-ui/core/Table'));
-var TableBody$1 = _interopDefault(require('@material-ui/core/TableBody'));
-var TableCell$1 = _interopDefault(require('@material-ui/core/TableCell'));
-var TableContainer$1 = _interopDefault(require('@material-ui/core/TableContainer'));
-var TableHead$1 = _interopDefault(require('@material-ui/core/TableHead'));
+var Table = _interopDefault(require('@material-ui/core/Table'));
+var TableBody = _interopDefault(require('@material-ui/core/TableBody'));
+var TableCell = _interopDefault(require('@material-ui/core/TableCell'));
+var TableContainer = _interopDefault(require('@material-ui/core/TableContainer'));
+var TableHead = _interopDefault(require('@material-ui/core/TableHead'));
 var TablePagination = _interopDefault(require('@material-ui/core/TablePagination'));
-var TableRow$1 = _interopDefault(require('@material-ui/core/TableRow'));
+var TableRow = _interopDefault(require('@material-ui/core/TableRow'));
 var TableSortLabel = _interopDefault(require('@material-ui/core/TableSortLabel'));
 require('@material-ui/core/Typography');
 var EditIcon = _interopDefault(require('@material-ui/icons/Edit'));
+var ExpandMore = _interopDefault(require('@material-ui/icons/ExpandMore'));
 var CircularProgress = _interopDefault(require('@material-ui/core/CircularProgress'));
 
 function List(_ref) {
@@ -61,7 +63,7 @@ function createCommonjsModule(fn, module) {
  */
 var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):60103,d=b?Symbol.for("react.portal"):60106,e=b?Symbol.for("react.fragment"):60107,f=b?Symbol.for("react.strict_mode"):60108,g=b?Symbol.for("react.profiler"):60114,h=b?Symbol.for("react.provider"):60109,k=b?Symbol.for("react.context"):60110,l=b?Symbol.for("react.async_mode"):60111,m=b?Symbol.for("react.concurrent_mode"):60111,n=b?Symbol.for("react.forward_ref"):60112,p=b?Symbol.for("react.suspense"):60113,q=b?
 Symbol.for("react.suspense_list"):60120,r=b?Symbol.for("react.memo"):60115,t=b?Symbol.for("react.lazy"):60116,v=b?Symbol.for("react.block"):60121,w=b?Symbol.for("react.fundamental"):60117,x=b?Symbol.for("react.responder"):60118,y=b?Symbol.for("react.scope"):60119;
-function z(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case t:case r:case h:return a;default:return u}}case d:return u}}}function A(a){return z(a)===m}var AsyncMode=l;var ConcurrentMode=m;var ContextConsumer=k;var ContextProvider=h;var Element=c;var ForwardRef=n;var Fragment$1=e;var Lazy=t;var Memo=r;var Portal=d;
+function z(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case t:case r:case h:return a;default:return u}}case d:return u}}}function A(a){return z(a)===m}var AsyncMode=l;var ConcurrentMode=m;var ContextConsumer=k;var ContextProvider=h;var Element=c;var ForwardRef=n;var Fragment=e;var Lazy=t;var Memo=r;var Portal=d;
 var Profiler=g;var StrictMode=f;var Suspense=p;var isAsyncMode=function(a){return A(a)||z(a)===l};var isConcurrentMode=A;var isContextConsumer=function(a){return z(a)===k};var isContextProvider=function(a){return z(a)===h};var isElement=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};var isForwardRef=function(a){return z(a)===n};var isFragment=function(a){return z(a)===e};var isLazy=function(a){return z(a)===t};
 var isMemo=function(a){return z(a)===r};var isPortal=function(a){return z(a)===d};var isProfiler=function(a){return z(a)===g};var isStrictMode=function(a){return z(a)===f};var isSuspense=function(a){return z(a)===p};
 var isValidElementType=function(a){return "string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||a===q||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n||a.$$typeof===w||a.$$typeof===x||a.$$typeof===y||a.$$typeof===v)};var typeOf=z;
@@ -73,7 +75,7 @@ var reactIs_production_min = {
 	ContextProvider: ContextProvider,
 	Element: Element,
 	ForwardRef: ForwardRef,
-	Fragment: Fragment$1,
+	Fragment: Fragment,
 	Lazy: Lazy,
 	Memo: Memo,
 	Portal: Portal,
@@ -1185,7 +1187,13 @@ var useStyles = styles.makeStyles(function (theme) {
 
 function MButton(props) {
   var classes = useStyles();
-  var action = props.action;
+  var action = props.action,
+      onCallback = props.onCallback;
+
+  var handleAction = function handleAction(e) {
+    e.preventDefault();
+    onCallback(e);
+  };
 
   return /*#__PURE__*/React__default.createElement("div", {
     className: classes.root
@@ -1196,14 +1204,15 @@ function MButton(props) {
       margin: "5px"
     },
     onClick: function onClick(e) {
+      return handleAction(e);
     }
   }, action.icon, action.label)));
 }
 
 MButton.propTypes = {
   history: propTypes.object,
-  action: propTypes.object,
-  onCallback: propTypes.func
+  action: propTypes.object.isRequired,
+  onCallback: propTypes.func.isRequired
 };
 
 function MkForm(props) {
@@ -1214,11 +1223,20 @@ function MkForm(props) {
       data = _props$data === void 0 ? {} : _props$data,
       onDropdownCreateNew = props.onDropdownCreateNew,
       _props$actions = props.actions,
-      actions = _props$actions === void 0 ? [] : _props$actions;
+      actions = _props$actions === void 0 ? [] : _props$actions,
+      partHeaders = props.partHeaders;
 
-  var _React$useState = React__default.useState(data != undefined ? data : {}),
+  var _React$useState = React__default.useState(data !== undefined ? data : {}),
       _data = _React$useState[0],
       setDataField = _React$useState[1];
+
+  var _React$useState2 = React__default.useState(false),
+      open = _React$useState2[0],
+      setOpen = _React$useState2[1];
+
+  var _React$useState3 = React__default.useState("#"),
+      selectedPhoto = _React$useState3[0],
+      setSelectedPhoto = _React$useState3[1];
 
   var handleTextString = function handleTextString(e, fieldName) {
     var _extends2;
@@ -1259,10 +1277,14 @@ function MkForm(props) {
   };
 
   var onChangeValue = function onChangeValue(fieldName, value) {
-    var _extends8;
+    var _extends7;
 
-    setDataField(_extends({}, _data, (_extends8 = {}, _extends8[fieldName] = value, _extends8)));
+    setDataField(_extends({}, _data, (_extends7 = {}, _extends7[fieldName] = value, _extends7)));
   };
+
+  var onFileChange = function onFileChange(e, f) {};
+
+  var handleSelectItemDialog = function handleSelectItemDialog() {};
 
   return /*#__PURE__*/React__default.createElement("div", {
     className: classes.root
@@ -1272,7 +1294,7 @@ function MkForm(props) {
     item: true,
     xs: 12
   }, fields.map(function (f, i) {
-    if (f.type == 'text_string') {
+    if (f.type === 'text_string') {
       return /*#__PURE__*/React__default.createElement(core.Grid, {
         key: f.field_name,
         container: true,
@@ -1309,12 +1331,12 @@ function MkForm(props) {
         InputProps: {
           readOnly: f.readOnly ? f.readOnly : false
         },
-        value: _data != undefined ? _data[f.field_name] : '',
+        value: _data !== undefined ? _data[f.field_name] : '',
         onChange: function onChange(e) {
           return handleTextString(e, f.field_name);
         }
       })));
-    } else if (f.type == 'text_number') {
+    } else if (f.type === 'text_number') {
       return /*#__PURE__*/React__default.createElement(core.Grid, {
         key: f.field_name,
         container: true,
@@ -1349,12 +1371,12 @@ function MkForm(props) {
           width: '100%'
         },
         type: "number",
-        value: _data != undefined ? _data[f.field_name] : '',
+        value: _data !== undefined ? _data[f.field_name] : '',
         onChange: function onChange(e) {
           return handleTextNumber(e, f.field_name);
         }
       })));
-    } else if (f.type == 'text_multiline') {
+    } else if (f.type === 'text_multiline') {
       return /*#__PURE__*/React__default.createElement(core.Grid, {
         key: f.field_name,
         container: true,
@@ -1389,13 +1411,13 @@ function MkForm(props) {
         style: {
           width: '100%'
         },
-        value: _data != undefined ? _data[f.field_name] : '',
+        value: _data !== undefined ? _data[f.field_name] : '',
         variant: "outlined",
         onChange: function onChange(e) {
           return handleTextMultiline(e, f.field_name);
         }
       })));
-    } else if (f.type == 'date') {
+    } else if (f.type === 'date') {
       return /*#__PURE__*/React__default.createElement(core.Grid, {
         key: f.field_name,
         container: true,
@@ -1426,7 +1448,7 @@ function MkForm(props) {
         variant: "outlined",
         autoComplete: "off",
         size: "small",
-        value: _data != undefined ? _data[f.field_name] : '',
+        value: _data !== undefined ? _data[f.field_name] : '',
         type: "date",
         style: {
           width: '100%'
@@ -1435,11 +1457,9 @@ function MkForm(props) {
           return handleDate(e, f.field_name);
         }
       })));
-    } else if (f.type == 'dropdown') {
-      if (f.options != undefined && f.option_label_field != undefined) {
-        if (f.field_name == 'priority') {
-          var _React$createElement;
-
+    } else if (f.type === 'dropdown') {
+      if (f.options !== undefined && f.option_label_field !== undefined) {
+        if (f.field_name === 'priority') {
           return /*#__PURE__*/React__default.createElement(core.Grid, {
             key: f.field_name,
             container: true,
@@ -1465,21 +1485,24 @@ function MkForm(props) {
             item: true,
             xs: 12,
             sm: 7
-          }, /*#__PURE__*/React__default.createElement(core.NativeSelect, (_React$createElement = {
-            id: "demo-customized-select-native",
-            value: _data != undefined ? _data[f.field_name] : '',
+          }, /*#__PURE__*/React__default.createElement(core.NativeSelect, {
+            value: _data !== undefined ? _data[f.field_name] : '',
             onChange: function onChange(e) {
               return handleDropDownChange(e, f.field_name);
+            },
+            id: f.field_name,
+            input: /*#__PURE__*/React__default.createElement(BootstrapInput, null),
+            style: {
+              width: '100%'
             }
-          }, _React$createElement["id"] = f.field_name, _React$createElement.input = /*#__PURE__*/React__default.createElement(BootstrapInput, null), _React$createElement.style = {
-            width: '100%'
-          }, _React$createElement), /*#__PURE__*/React__default.createElement("option", {
+          }, /*#__PURE__*/React__default.createElement("option", {
             "aria-label": "None",
             value: ""
           }, "Select"), f.options.map(function (d, i) {
             return /*#__PURE__*/React__default.createElement("option", {
               name: d.name,
-              value: d.id
+              value: d.id,
+              key: d.id
             }, d.name);
           }))));
         } else {
@@ -1522,7 +1545,7 @@ function MkForm(props) {
               width: '100%'
             },
             size: "small",
-            value: _data != undefined ? _data[f.field_name] ? _data[f.field_name] : " " : " ",
+            value: _data !== undefined ? _data[f.field_name] ? _data[f.field_name] : " " : " ",
             filterOptions: function filterOptions(options, params) {
               console.log("Autocomplete", f.can_create);
 
@@ -1531,8 +1554,9 @@ function MkForm(props) {
                 var filtered = filter(options, params);
                 return [].concat(newFilter, filtered);
               } else {
-                var filtered = filter(options, params);
-                return filtered;
+                var _filtered = filter(options, params);
+
+                return _filtered;
               }
             },
             onChange: function onChange(event, newValue) {
@@ -1546,7 +1570,7 @@ function MkForm(props) {
                 };
                 handleCanCreateNew(d);
               } else {
-                if (newValue != null && newValue.inputValue != '' && newValue.product_desc != "") {
+                if (newValue != null && newValue.inputValue !== '' && newValue.product_desc !== "") {
                   onChangeValue(f.field_name, newValue[f.option_label_field]);
                 }
               }
@@ -1559,7 +1583,7 @@ function MkForm(props) {
           })));
         }
       }
-    } else if (f.type == 'photo_list') {
+    } else if (f.type === 'photo_list') {
       console.log('photo_list:', _data);
       return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(core.Grid, {
         key: f.field_name,
@@ -1598,10 +1622,10 @@ function MkForm(props) {
         type: "file",
         name: "imgCollection",
         onChange: function onChange(e) {
-          return onFileChange(e, f.field_name);
+          return onFileChange();
         },
         multiple: true
-      })))))), _data[f.field_name] != undefined && _data[f.field_name].length != 0 ? /*#__PURE__*/React__default.createElement(core.Grid, {
+      })))))), _data[f.field_name] !== undefined && _data[f.field_name].length !== 0 ? /*#__PURE__*/React__default.createElement(core.Grid, {
         key: f.field_name,
         container: true,
         style: {
@@ -1618,10 +1642,10 @@ function MkForm(props) {
           alignItems: 'center',
           marginBottom: '10px'
         }
-      }, /*#__PURE__*/React__default.createElement(GridList, {
+      }, /*#__PURE__*/React__default.createElement(core.GridList, {
         className: classes.gridList
-      }, _data[f.field_name] == undefined ? /*#__PURE__*/React__default.createElement("span", null) : _data[f.field_name].map(function (tile) {
-        return /*#__PURE__*/React__default.createElement(GridListTile, {
+      }, _data[f.field_name] === undefined ? /*#__PURE__*/React__default.createElement("span", null) : _data[f.field_name].map(function (tile) {
+        return /*#__PURE__*/React__default.createElement(core.GridListTile, {
           key: tile,
           style: {
             width: '100px',
@@ -1631,20 +1655,19 @@ function MkForm(props) {
           src: tile,
           alt: tile,
           onClick: function onClick(e) {
-            setSelectedPhoto(tile);
             setOpen(true);
           }
         }));
-      })))), /*#__PURE__*/React__default.createElement(Dialog, {
+      })))), /*#__PURE__*/React__default.createElement(core.Dialog, {
         maxWidth: "lg",
         "aria-labelledby": "customized-dialog-title",
         open: open
-      }, /*#__PURE__*/React__default.createElement(DialogTitle, {
+      }, /*#__PURE__*/React__default.createElement(core.DialogTitle, {
         id: "customized-dialog-title",
         onClose: function onClose(e) {
           return setOpen(false);
         }
-      }, "Photos"), /*#__PURE__*/React__default.createElement(DialogContent, {
+      }, "Photos"), /*#__PURE__*/React__default.createElement(core.DialogContent, {
         dividers: true
       }, /*#__PURE__*/React__default.createElement(core.Grid, {
         item: true,
@@ -1671,7 +1694,7 @@ function MkForm(props) {
           }
         })));
       }) : /*#__PURE__*/React__default.createElement("span", null)))))) : /*#__PURE__*/React__default.createElement(core.Grid, null));
-    } else if (f.type == 'list') {
+    } else if (f.type === 'list') {
       console.log('list', _data[f.field_name]);
       return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(core.Grid, {
         key: f.field_name,
@@ -1720,26 +1743,26 @@ function MkForm(props) {
           alignItems: 'center',
           marginBottom: '10px'
         }
-      }, /*#__PURE__*/React__default.createElement(TableContainer, null, /*#__PURE__*/React__default.createElement(Table, {
+      }, /*#__PURE__*/React__default.createElement(core.TableContainer, null, /*#__PURE__*/React__default.createElement(core.Table, {
         className: classes.table,
         size: "small",
         "aria-label": "a dense table"
-      }, /*#__PURE__*/React__default.createElement(TableHead, null, /*#__PURE__*/React__default.createElement(TableRow, null, partHeaders.map(function (h, i) {
-        return /*#__PURE__*/React__default.createElement(TableCell, {
+      }, /*#__PURE__*/React__default.createElement(core.TableHead, null, /*#__PURE__*/React__default.createElement(core.TableRow, null, partHeaders.map(function (h, i) {
+        return /*#__PURE__*/React__default.createElement(core.TableCell, {
           key: h.id,
           align: "left"
         }, h.label);
-      }))), /*#__PURE__*/React__default.createElement(TableBody, null, _data[f.field_name].length > 0 ? _data[f.field_name].map(function (row) {
-        return /*#__PURE__*/React__default.createElement(TableRow, {
+      }))), /*#__PURE__*/React__default.createElement(core.TableBody, null, _data[f.field_name].length > 0 ? _data[f.field_name].map(function (row) {
+        return /*#__PURE__*/React__default.createElement(core.TableRow, {
           key: row.name
         }, partHeaders.map(function (h, i) {
-          return /*#__PURE__*/React__default.createElement(TableCell, {
+          return /*#__PURE__*/React__default.createElement(core.TableCell, {
             key: h.id,
             align: h.numeric ? 'right' : 'left'
           }, row[h.id]);
         }));
       }) : /*#__PURE__*/React__default.createElement("span", null)))))));
-    } else if (f.type == 'time') {
+    } else if (f.type === 'time') {
       return /*#__PURE__*/React__default.createElement(core.Grid, {
         key: f.field_name,
         container: true,
@@ -1776,9 +1799,6 @@ function MkForm(props) {
         },
         inputProps: {
           step: 300
-        },
-        onChange: function onChange(e) {
-          return handleTime(e, f.field_name);
         }
       })));
     }
@@ -1789,7 +1809,9 @@ function MkForm(props) {
     if (a.status === _data.status) {
       return /*#__PURE__*/React__default.createElement(MButton, {
         action: a,
-        onCallback: a.callback(_data)
+        onCallback: function onCallback(event) {
+          return a.callback(event, _data);
+        }
       });
     }
   })) : /*#__PURE__*/React__default.createElement(core.Grid, null)));
@@ -1849,7 +1871,7 @@ var StyledTableCell = styles.withStyles(function (theme) {
       fontSize: 14
     }
   };
-})(TableCell$1);
+})(TableCell);
 
 function EnhancedTableHead(props) {
   var classes = props.classes,
@@ -1864,7 +1886,7 @@ function EnhancedTableHead(props) {
     };
   };
 
-  return /*#__PURE__*/React__default.createElement(TableHead$1, null, /*#__PURE__*/React__default.createElement(TableRow$1, null, headCells.map(function (headCell) {
+  return /*#__PURE__*/React__default.createElement(TableHead, null, /*#__PURE__*/React__default.createElement(TableRow, null, headCells.map(function (headCell) {
     return /*#__PURE__*/React__default.createElement(StyledTableCell, {
       key: headCell.id,
       align: headCell.numeric ? 'right' : 'left',
@@ -1883,12 +1905,12 @@ function EnhancedTableHead(props) {
     }, headCell.label, _orderBy === headCell.id ? /*#__PURE__*/React__default.createElement("span", {
       className: classes.visuallyHidden
     }, _order === 'desc' ? 'sorted descending' : 'sorted ascending') : null) : /*#__PURE__*/React__default.createElement(TableSortLabel, {
-      hideSortIcon: true,
+      hideSortIcon: "true",
       align: "right"
     }, headCell.label));
   }), /*#__PURE__*/React__default.createElement(StyledTableCell, {
     style: {
-      width: '150px'
+      width: '100px'
     }
   })));
 }
@@ -1947,10 +1969,10 @@ var StyledTableRow = styles.withStyles(function (theme) {
       }
     }
   };
-})(TableRow$1);
+})(TableRow);
 
 function getUpdatedDate(p) {
-  var statusDate = p['updated_date'];
+  var statusDate = p.updated_date;
   var day = '';
 
   if (statusDate !== undefined) {
@@ -1995,20 +2017,24 @@ function RowMenu(props) {
     e.stopPropagation();
   };
 
-  return /*#__PURE__*/React__default.createElement(Fragment, null, /*#__PURE__*/React__default.createElement(Menu, {
+  return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(core.Menu, {
     id: "actions-" + row.id,
     anchorEl: anchorEl,
     keepMounted: true,
     open: Boolean(anchorEl),
     onClose: handleClose
   }, actions.map(function (action) {
-    return /*#__PURE__*/React__default.createElement(MenuItem, {
+    return /*#__PURE__*/React__default.createElement(core.MenuItem, {
       key: action.display_name,
       onClick: function onClick(e) {
         return handleSelectMenu(e, row, action);
       }
     }, action.display_name);
   })), /*#__PURE__*/React__default.createElement(core.Grid, {
+    container: true,
+    direction: "row",
+    justify: "flex-end",
+    alignItems: "center",
     style: {
       display: 'flex'
     }
@@ -2017,12 +2043,18 @@ function RowMenu(props) {
     "aria-label": "more",
     "aria-controls": "long-menu",
     "aria-haspopup": "true",
-    onClick: handleEdit
-  }, /*#__PURE__*/React__default.createElement(EditIcon, null)), /*#__PURE__*/React__default.createElement(core.IconButton, {
+    onClick: handleEdit,
+    size: "small"
+  }, /*#__PURE__*/React__default.createElement(EditIcon, null)), /*#__PURE__*/React__default.createElement(core.Box, {
+    style: {
+      width: '10px'
+    }
+  }), /*#__PURE__*/React__default.createElement(core.IconButton, {
     id: "dropdown-" + row.id,
     "aria-label": "more",
     "aria-controls": "long-menu",
     "aria-haspopup": "true",
+    size: "small",
     onClick: handleMenuClick
   }, /*#__PURE__*/React__default.createElement(ExpandMore, null))));
 }
@@ -2031,7 +2063,6 @@ RowMenu.propTypes = {
   row: propTypes.object.isRequired,
   actions: propTypes.array.isRequired,
   onSelectedAction: propTypes.func.isRequired,
-  showEdit: propTypes.bool,
   onRowEdit: propTypes.func
 };
 
@@ -2055,17 +2086,17 @@ function ConfirmDialog(props) {
     onContinue(true);
   };
 
-  return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(Dialog, {
+  return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(core.Dialog, {
     open: open,
     onClose: handleClose,
     "aria-labelledby": "alert-dialog-title",
     "aria-describedby": "alert-dialog-description"
-  }, /*#__PURE__*/React__default.createElement(DialogTitle, {
+  }, /*#__PURE__*/React__default.createElement(core.DialogTitle, {
     id: "alert-dialog-title"
-  }, "Delete this " + type + ' "' + itemName + '"?'), /*#__PURE__*/React__default.createElement(DialogActions, null, /*#__PURE__*/React__default.createElement(Button, {
+  }, "Delete this " + type + ' "' + itemName + '"?'), /*#__PURE__*/React__default.createElement(core.DialogActions, null, /*#__PURE__*/React__default.createElement(core.Button, {
     onClick: handleClose,
     color: "primary"
-  }, "Cancel"), /*#__PURE__*/React__default.createElement(Button, {
+  }, "Cancel"), /*#__PURE__*/React__default.createElement(core.Button, {
     onClick: handleContinue,
     color: "primary",
     autoFocus: true
@@ -2102,7 +2133,9 @@ function MkTable(props) {
       onChangePaginatePage = props.onChangePaginatePage,
       onGetData = props.onGetData,
       onUpdateDataRow = props.onUpdateDataRow,
-      onChangeRowPerPage = props.onChangeRowPerPage;
+      onChangeRowPerPage = props.onChangeRowPerPage,
+      _props$dense = props.dense,
+      dense = _props$dense === void 0 ? true : _props$dense;
 
   var _React$useState3 = React__default.useState(rowsPerPage),
       _rowsPerPage = _React$useState3[0],
@@ -2113,6 +2146,7 @@ function MkTable(props) {
       setPage = _React$useState4[1];
 
   var _React$useState5 = React__default.useState(noMoreToLoad),
+      _noMoreToLoad = _React$useState5[0],
       setNoMoreToLoad = _React$useState5[1];
 
   var _React$useState6 = React__default.useState(order),
@@ -2124,11 +2158,28 @@ function MkTable(props) {
       setOrderBy = _React$useState7[1];
 
   var _React$useState8 = React__default.useState(isLoading),
+      _isLoading = _React$useState8[0],
       setIsLoading = _React$useState8[1];
 
   var _React$useState9 = React__default.useState(false),
       _isConfirm = _React$useState9[0],
       setIsConfirm = _React$useState9[1];
+
+  var _React$useState10 = React__default.useState(''),
+      itemName = _React$useState10[0],
+      setItemName = _React$useState10[1];
+
+  var _React$useState11 = React__default.useState({}),
+      row = _React$useState11[0],
+      setRow = _React$useState11[1];
+
+  var _React$useState12 = React__default.useState(''),
+      action = _React$useState12[0],
+      setAction = _React$useState12[1];
+
+  var _React$useState13 = React__default.useState(dense),
+      _dense = _React$useState13[0],
+      setDense = _React$useState13[1];
 
   var handleSelectMenu = function handleSelectMenu(row, action) {
     if (action === 'delete') {
@@ -2162,6 +2213,7 @@ function MkTable(props) {
     setOrderBy(orderBy);
     setIsLoading(isLoading);
     setRowsPerPage(rowsPerPage);
+    setDense(dense);
   }, []);
 
   var handleRequestSort = function handleRequestSort(event, property) {
@@ -2171,7 +2223,7 @@ function MkTable(props) {
   };
 
   var handleChangePage = function handleChangePage(event, newPage) {
-    if (!noMoreToLoad && (newPage + 1) * _rowsPerPage >= data.length) {
+    if (!_noMoreToLoad && (newPage + 1) * _rowsPerPage >= data.length) {
       onGetData();
     }
 
@@ -2190,10 +2242,10 @@ function MkTable(props) {
     container: true
   }, /*#__PURE__*/React__default.createElement(core.Grid, {
     item: true
-  }, /*#__PURE__*/React__default.createElement(TableContainer$1, null, /*#__PURE__*/React__default.createElement(Table$1, {
+  }, /*#__PURE__*/React__default.createElement(TableContainer, null, /*#__PURE__*/React__default.createElement(Table, {
     className: classes.table,
     "aria-labelledby": "tableTitle",
-    size: "small",
+    size: _dense ? 'small' : 'medium',
     "aria-label": "enhanced table"
   }, /*#__PURE__*/React__default.createElement(EnhancedTableHead, {
     classes: classes,
@@ -2203,7 +2255,7 @@ function MkTable(props) {
     onRequestSort: handleRequestSort,
     rowCount: data.length !== undefined ? data.length : 0,
     dispatch: dispatch
-  }), /*#__PURE__*/React__default.createElement(TableBody$1, null, isLoading ? /*#__PURE__*/React__default.createElement(StyledTableRow, null, /*#__PURE__*/React__default.createElement(TableCell$1, {
+  }), /*#__PURE__*/React__default.createElement(TableBody, null, _isLoading ? /*#__PURE__*/React__default.createElement(StyledTableRow, null, /*#__PURE__*/React__default.createElement(TableCell, {
     colSpan: headers.length,
     align: "center"
   }, " ", /*#__PURE__*/React__default.createElement(CircularProgress, null))) : data.length !== 0 ? stableSort(data, getComparator(_order, _orderBy)).slice(_page * _rowsPerPage, _page * _rowsPerPage + _rowsPerPage).map(function (row, index) {
@@ -2215,7 +2267,7 @@ function MkTable(props) {
       id: row.id
     }, headers.map(function (h, i) {
       if (h.id === 'sr') {
-        return /*#__PURE__*/React__default.createElement(TableCell$1, {
+        return /*#__PURE__*/React__default.createElement(TableCell, {
           key: h.id,
           align: "right",
           style: {
@@ -2225,51 +2277,53 @@ function MkTable(props) {
       }
 
       if (h.id === 'status') {
-        return /*#__PURE__*/React__default.createElement(TableCell$1, {
+        return /*#__PURE__*/React__default.createElement(TableCell, {
           key: h.id,
           align: h.numeric ? 'right' : 'left'
         }, row[h.id]);
       }
 
       if (h.id === 'updated_date') {
-        return /*#__PURE__*/React__default.createElement(TableCell$1, {
+        return /*#__PURE__*/React__default.createElement(TableCell, {
           key: h.id,
           align: h.numeric ? 'right' : 'left',
           style: {
-            width: h.width
+            width: h.width ? h.width : null
           }
         }, getUpdatedDate(row));
       } else {
-        return /*#__PURE__*/React__default.createElement(TableCell$1, {
+        return /*#__PURE__*/React__default.createElement(TableCell, {
           key: h.id,
           align: h.numeric ? 'right' : 'left',
           style: {
-            width: h.width
+            width: h.width ? h.width : null
           }
         }, row[h.id]);
       }
-    }), actions ? /*#__PURE__*/React__default.createElement(TableCell$1, {
+    }), actions ? /*#__PURE__*/React__default.createElement(TableCell, {
       style: {
         width: '150px'
-      }
+      },
+      align: "right"
     }, /*#__PURE__*/React__default.createElement(RowMenu, {
       actions: actions,
       row: row,
-      showEdit: true,
       onRowEdit: function onRowEdit(data) {
         return handleRowEdit(data);
       },
       onSelectedAction: function onSelectedAction(data, actionName) {
         return handleSelectMenu(data, actionName);
       }
-    })) : /*#__PURE__*/React__default.createElement(TableCell$1, {
+    })) : /*#__PURE__*/React__default.createElement(TableCell, {
       style: {
         width: '150px'
-      }
+      },
+      align: "right"
     }, /*#__PURE__*/React__default.createElement(core.IconButton, {
       onClick: function onClick(event) {
         return handleRowEdit(row);
-      }
+      },
+      size: dense ? "small" : "medium"
     }, /*#__PURE__*/React__default.createElement(EditIcon, null))));
   }) : /*#__PURE__*/React__default.createElement(StyledTableRow, {
     style: {
@@ -2278,6 +2332,10 @@ function MkTable(props) {
   })))), /*#__PURE__*/React__default.createElement(TablePagination, {
     rowsPerPageOptions: [10, 30, 50],
     labelDisplayedRows: function labelDisplayedRows(_ref) {
+      var from = _ref.from,
+          to = _ref.to,
+          count = _ref.count;
+      console.log(from, to, count);
     },
     component: "div",
     count: data.length,
@@ -2314,13 +2372,12 @@ MkTable.propTypes = {
   isLoading: propTypes.any,
   onChangePaginatePage: propTypes.any,
   onGetData: propTypes.any,
-  onChangeRowPerPage: propTypes.any
+  onChangeRowPerPage: propTypes.any,
+  dense: propTypes.any
 };
 
 var useStyles$2 = styles.makeStyles(function (theme) {
-  var _button, _ref;
-
-  return _ref = {
+  return {
     root: {
       width: '100%'
     },
@@ -2350,9 +2407,11 @@ var useStyles$2 = styles.makeStyles(function (theme) {
         borderBottom: "none"
       }
     },
-    button: (_button = {
-      color: 'white'
-    }, _button["color"] = theme.palette.primary.main, _button.width = 150, _button.height = 55, _button),
+    button: {
+      color: 'white',
+      width: 150,
+      height: 55
+    },
     closeButton: {
       position: 'absolute',
       right: theme.spacing(1),
@@ -2365,11 +2424,7 @@ var useStyles$2 = styles.makeStyles(function (theme) {
       color: theme.palette.primary.main,
       fontWeight: "bold"
     }
-  }, _ref["paper"] = {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  }, _ref;
+  };
 });
 
 function getDataString(data, fieldName) {
@@ -2386,21 +2441,12 @@ function MkInfo(props) {
       currentTabName = props.currentTabName,
       actions = props.actions;
 
-  var _React$useState = React__default.useState(isEditable != undefined ? isEditable : true),
+  var _React$useState = React__default.useState(isEditable !== undefined ? isEditable : true),
       editable = _React$useState[0],
       setEditable = _React$useState[1];
 
-  var _React$useState2 = React__default.useState({}),
-      data = _React$useState2[0],
-      setData = _React$useState2[1];
-
   var handleEdit = function handleEdit() {
     setEditable(false);
-  };
-
-  var handleUpdateData = function handleUpdateData(data) {
-    console.log('handle update date:', data);
-    setData(data);
   };
 
   return /*#__PURE__*/React__default.createElement("div", {
@@ -2414,14 +2460,7 @@ function MkInfo(props) {
     item: true,
     xs: 12,
     sm: 7
-  }, /*#__PURE__*/React__default.createElement(MkForm, {
-    updateData: infoData,
-    fields: displayFields,
-    isNew: isNew,
-    onDataCallback: function onDataCallback(d) {
-      return handleUpdateData(d);
-    }
-  }))) : /*#__PURE__*/React__default.createElement(core.Grid, {
+  })) : /*#__PURE__*/React__default.createElement(core.Grid, {
     container: true,
     style: {
       marginTop: '30px'
@@ -2430,16 +2469,12 @@ function MkInfo(props) {
     item: true,
     xs: 12,
     sm: 7
-  }, !editable ? /*#__PURE__*/React__default.createElement(MkForm, {
-    fields: displayFields,
-    isNew: isNew,
-    updateData: infoData,
-    onDataCallback: function onDataCallback(d) {
-      return handleUpdateData(d);
-    }
-  }) : displayFields.map(function (d, i) {
+  }, !editable ?
+  /*#__PURE__*/
+  React__default.createElement("div", null) : displayFields.map(function (d, i) {
     return /*#__PURE__*/React__default.createElement(core.Grid, {
-      container: true
+      container: true,
+      key: i
     }, /*#__PURE__*/React__default.createElement(core.Grid, {
       item: true,
       xs: 12,
@@ -2465,18 +2500,13 @@ function MkInfo(props) {
       item: true,
       xs: 12,
       sm: 7
-    }, d.type == 'photo' ? /*#__PURE__*/React__default.createElement("img", {
-      src: infoData['photo_url'],
-      style: {
-        width: '120px',
-        height: '120px',
-        border: '1px solid grey'
-      }
-    }) : /*#__PURE__*/React__default.createElement(core.Typography, {
+    }, d.type === 'photo' ? /*#__PURE__*/React__default.createElement("img", null) :
+    /*#__PURE__*/
+    React__default.createElement(core.Typography, {
       style: {
         paddingRight: '30px'
       }
-    }, infoData != undefined ? getDataString(infoData, d.fieldName) : ''))));
+    }, infoData !== undefined ? getDataString(infoData, d.fieldName) : ''))));
   })), /*#__PURE__*/React__default.createElement(core.Grid, {
     item: true,
     xs: 12,
@@ -2486,50 +2516,41 @@ function MkInfo(props) {
     direction: "row",
     alignItems: "flex-end"
   }, actions.map(function (a, i) {
-    if (currentTabName == 'account') {
-      if (infoData.status == 'invited') {
+    if (currentTabName === 'account') {
+      if (infoData.status === 'invited') {
         return /*#__PURE__*/React__default.createElement(core.Box, null, /*#__PURE__*/React__default.createElement(core.Button, {
           style: {
             color: 'white',
             backgroundColor: 'grey',
             "float": 'right',
             marginLeft: '10px'
-          },
-          onClick: function onClick() {
-            return a.callback(data);
           }
         }, a.label));
       }
 
-      if (infoData.status == 'joined') {
+      if (infoData.status === 'joined') {
         return /*#__PURE__*/React__default.createElement(core.Box, null, /*#__PURE__*/React__default.createElement(core.Button, {
           style: {
             color: 'white',
             backgroundColor: 'grey',
             "float": 'right',
             marginLeft: '10px'
-          },
-          onClick: function onClick() {
-            return a.callback(data);
           }
         }, a.label));
       }
 
-      if (infoData.status == 'disabled') {
+      if (infoData.status === 'disabled') {
         return /*#__PURE__*/React__default.createElement(core.Box, null, /*#__PURE__*/React__default.createElement(core.Button, {
           style: {
             color: 'white',
             backgroundColor: 'grey',
             "float": 'right',
             marginLeft: '10px'
-          },
-          onClick: function onClick() {
-            return a.callback(data);
           }
         }, a.label));
       }
 
-      if (infoData.status == 'requested') {
+      if (infoData.status === 'requested') {
         if (editable) {
           return /*#__PURE__*/React__default.createElement(core.Box, null, /*#__PURE__*/React__default.createElement(core.Button, {
             style: {
@@ -2544,16 +2565,13 @@ function MkInfo(props) {
               backgroundColor: 'grey',
               "float": 'right',
               marginLeft: '10px'
-            },
-            onClick: function onClick() {
-              return a.callback(data);
             }
           }, a.label));
         }
       }
     } else {
       if (editable) {
-        if (a.action_type == 'edit') {
+        if (a.action_type === 'edit') {
           console.log('type: ', a.action_type, 'editable: ', editable);
           return /*#__PURE__*/React__default.createElement(core.Box, null, /*#__PURE__*/React__default.createElement(core.Button, {
             style: {
@@ -2563,37 +2581,28 @@ function MkInfo(props) {
           }, a.icon, a.label));
         }
 
-        if (a.action_type == 'delete') {
+        if (a.action_type === 'delete') {
           return /*#__PURE__*/React__default.createElement(core.Box, null, /*#__PURE__*/React__default.createElement(core.Button, {
             style: {
               "float": 'right',
               marginLeft: '10px'
-            },
-            onClick: function onClick() {
-              return a.callback(data);
             }
           }, a.icon, a.label));
         }
       } else {
-        if (a.action_type == 'save') {
+        if (a.action_type === 'save') {
           return /*#__PURE__*/React__default.createElement(core.Box, null, /*#__PURE__*/React__default.createElement(core.Button, {
             style: {
               marginLeft: '10px'
-            },
-            onClick: function onClick() {
-              return a.callback(data);
             }
           }, a.icon, a.label));
         }
 
-        if (a.action_type == 'cancel') {
+        if (a.action_type === 'cancel') {
           return /*#__PURE__*/React__default.createElement(core.Box, null, /*#__PURE__*/React__default.createElement(core.Button, {
             style: {
               "float": 'right',
               marginLeft: '10px'
-            },
-            onClick: function onClick() {
-              return a.callback(data);
             }
           }, a.icon, a.label));
         }
