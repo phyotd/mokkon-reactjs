@@ -4,7 +4,7 @@ Mokkon's reactjs components
 
 ## MkForm 
 
-Props
+### Props
 
 | Name        | Type           | Default  | Description
 | ------------- |-------------| -----:| --------: |
@@ -13,29 +13,20 @@ Props
 | actions | Array of action object      |     |
 
 
-Field object
+**Field object**
 
 | Name        | Type           | Default  | Description
-| ------------- |-------------| -----:| --------: |
+| ------------- |-------------| -----:| -------- |
 | field_name      | string |  | Field name 
 | label      | string      |  | Field label |
-| type      | string      |  | Field type |
+| type      | string      |  | Field type <ul><li>dropdown</li><li>text_string</li><li>Propstext_number</li><li>text_multiline</li><li>list</li><li>photo_list</li><li>date</li><li>time</li></ul>|
 | options      | Array of selection object      |  | Data objects for dropdown or autocomplete |
 | can_create      | boolean      |  | To handle adding new object from dropdown or autocomplete |
 | readonly      | boolean      |  | To handle for not editable form |
 | option_label_field      | string      |  | Field name to get label of option in dropdown |
 
-Field Types
- * dropdown
- * text_string
- * text_number
- * text_multiline
- * list
- * photo_list
-  * date
- *  time
  
- Example of field object 
+ **Example of field object** 
 ```javascript
     [ 
         {
@@ -50,7 +41,7 @@ Field Types
     ]
 ```
 
-Action object
+**Action object**
 
 | Name        | Type           | Default  | Description
 | ------------- |-------------| -----| -------- |
@@ -59,7 +50,7 @@ Action object
 | callback      | function      |  | Action ( edit, delete, etc..) |
 | status      | string      |  | Form data status |
 
- Example of action object 
+ **Example of action object** 
 ```javascript
     { 
     "label": "string",
@@ -68,7 +59,7 @@ Action object
      }
  ```
 
-Data
+**Data**
 
 Example of data object 
 ```javascript
@@ -77,11 +68,11 @@ Example of data object
    "field_name":"value",
      }
  ```
-#
+
 
 ## MkTable
 
-Props
+**Props**
 
 
 | Name        | Type           | Default  | Description
@@ -101,7 +92,7 @@ Props
 | onChangeRowPerPage | function      |     | To change number of rows in page
 | dense | boolean      |   true  | To handle table size
 
- Example of action object 
+ **Example of action object **
 ```javascript
     { 
     "label": "string",
@@ -109,7 +100,9 @@ Props
     "callback": () => {}
      }
 ```
-Header object
+
+**Header object**
+
 | Name        | Type           | Default  | Description
 | ------------- |-------------| -----:| --------: |
 | id      | string |  | Field name of data object
@@ -118,7 +111,7 @@ Header object
 | label      | string      |   | Label of Header |
 | width | Array of action object      | | Tablecell width   
 
- Example of header object 
+ **Example of header object **
 ```javascript
     [
         {
