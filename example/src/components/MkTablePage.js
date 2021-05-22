@@ -2,7 +2,7 @@ import React from 'react'
 import { MkTable } from '@mokkon/reactjs'
 import '@mokkon/reactjs/dist/index.css';
 import { Grid } from '@material-ui/core';
-import theme from '../theme';
+// import theme from '../theme';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -45,13 +45,16 @@ const MkTablePage = (props) => {
     console.log('handleRowPerPage :', v);
   }
 
+  const styles = { headerBackgroundColor: 'green', headerTextcolor: 'white' , primaryColor:'lightBlue' };
+
   return (
     <div className="root">
       {/*table template */}
       <Grid container>
         <Grid item xs={8}>
           <MkTable
-            theme={theme}
+            // theme={theme}
+            styles={styles}
             headers={headCells}
             data={rows}
             page={page}

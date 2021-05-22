@@ -1861,20 +1861,8 @@ function stableSort(array, comparator) {
   });
 }
 
-var StyledTableCell = styles.withStyles(function (theme) {
-  return {
-    head: {
-      backgroundColor: '#0d47a1a8',
-      color: theme.palette.common.white
-    },
-    body: {
-      fontSize: 14
-    }
-  };
-})(TableCell);
-
 function EnhancedTableHead(props) {
-  var classes = props.classes,
+  var headerStyles = props.headerStyles,
       _order = props._order,
       _orderBy = props._orderBy,
       onRequestSort = props.onRequestSort,
@@ -1886,8 +1874,25 @@ function EnhancedTableHead(props) {
     };
   };
 
-  return /*#__PURE__*/React__default.createElement(TableHead, null, /*#__PURE__*/React__default.createElement(TableRow, null, headCells.map(function (headCell) {
-    return /*#__PURE__*/React__default.createElement(StyledTableCell, {
+  var sortedStyle = core.createMuiTheme({
+    overrides: {
+      MuiTableSortLabel: {
+        root: {
+          "&$active": {
+            color: headerStyles.sortedHeader === undefined ? 'grey' : headerStyles.sortedHeader,
+            "&& $icon": {
+              color: headerStyles.sortedHeader === undefined ? 'grey' : headerStyles.sortedHeader
+            }
+          }
+        }
+      }
+    }
+  });
+  return /*#__PURE__*/React__default.createElement(core.ThemeProvider, {
+    theme: sortedStyle
+  }, /*#__PURE__*/React__default.createElement(TableHead, null, /*#__PURE__*/React__default.createElement(TableRow, null, headCells.map(function (headCell) {
+    return /*#__PURE__*/React__default.createElement(TableCell, {
+      className: headerStyles.head,
       key: headCell.id,
       align: headCell.numeric ? 'right' : 'left',
       padding: headCell.disablePadding ? 'none' : 'default',
@@ -1903,73 +1908,72 @@ function EnhancedTableHead(props) {
         whiteSpace: "nowrap"
       }
     }, headCell.label, _orderBy === headCell.id ? /*#__PURE__*/React__default.createElement("span", {
-      className: classes.visuallyHidden
+      className: headerStyles.visuallyHidden
     }, _order === 'desc' ? 'sorted descending' : 'sorted ascending') : null) : /*#__PURE__*/React__default.createElement(TableSortLabel, {
       hideSortIcon: "true",
       align: "right"
     }, headCell.label));
-  }), /*#__PURE__*/React__default.createElement(StyledTableCell, {
+  }), /*#__PURE__*/React__default.createElement(TableCell, {
+    className: headerStyles.head,
     style: {
       width: '100px'
     }
-  })));
+  }))));
 }
 
 EnhancedTableHead.propTypes = {
-  classes: propTypes.object.isRequired,
+  headerStyles: propTypes.object.isRequired,
   onRequestSort: propTypes.func.isRequired,
   onSelectAllClick: propTypes.func.isRequired,
   _order: propTypes.oneOf(['asc', 'desc']).isRequired,
   _orderBy: propTypes.string.isRequired,
   rowCount: propTypes.number.isRequired
 };
-var useStyles$1 = styles.makeStyles(function (theme) {
-  return {
-    root: {
-      width: '100%'
+var useStyles$1 = styles.makeStyles({
+  root: {
+    width: '100%'
+  },
+  table: {
+    tableLayout: 'fixed'
+  },
+  visuallyHidden: {
+    b_order: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1
+  },
+  underline: {
+    "&&&:before": {
+      b_orderBottom: "none"
     },
-    paper: {
-      width: '100%',
-      marginBottom: theme.spacing(2)
-    },
-    table: {
-      tableLayout: 'fixed'
-    },
-    visuallyHidden: {
-      b_order: 0,
-      clip: 'rect(0 0 0 0)',
-      height: 1,
-      margin: -1,
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      top: 20,
-      width: 1
-    },
-    underline: {
-      "&&&:before": {
-        b_orderBottom: "none"
-      },
-      "&&:after": {
-        b_orderBottom: "none"
-      }
-    },
-    bomLink: {
-      cursor: "pointer",
-      color: theme.primary,
-      textDecoration: "underline"
+    "&&:after": {
+      b_orderBottom: "none"
     }
-  };
-});
-var StyledTableRow = styles.withStyles(function (theme) {
-  return {
-    root: {
+  },
+  head: function head(props) {
+    return {
+      backgroundColor: props.headerBackgroundColor === undefined ? '#0d47a1a8' : props.headerBackgroundColor,
+      color: props.headerTextColor === undefined ? 'white' : props.headerTextColor
+    };
+  },
+  sortedHeader: function sortedHeader(props) {
+    return {
+      color: props.headerTextColor === undefined ? 'grey' : props.headerTextColor
+    };
+  },
+  styledTableRow: function styledTableRow(props) {
+    return {
       '&:nth-of-type(even)': {
-        backgroundColor: '#0d47a11c'
+        backgroundColor: props.primaryColor === undefined ? '#0d47a11c' : props.primaryColor
       }
-    }
-  };
-})(TableRow);
+    };
+  }
+});
 
 function getUpdatedDate(p) {
   var statusDate = p.updated_date;
@@ -2113,7 +2117,8 @@ ConfirmDialog.propTypes = {
 };
 
 function MkTable(props) {
-  var classes = useStyles$1();
+  console.log("props.styles:", props.styles);
+  var classes = useStyles$1(props.styles);
   var dispatch = props.dispatch,
       _props$data = props.data,
       data = _props$data === void 0 ? [] : _props$data,
@@ -2248,23 +2253,26 @@ function MkTable(props) {
     size: _dense ? 'small' : 'medium',
     "aria-label": "enhanced table"
   }, /*#__PURE__*/React__default.createElement(EnhancedTableHead, {
-    classes: classes,
+    headerStyles: classes,
     headCells: headers,
     _order: _order,
     _orderBy: _orderBy,
     onRequestSort: handleRequestSort,
     rowCount: data.length !== undefined ? data.length : 0,
     dispatch: dispatch
-  }), /*#__PURE__*/React__default.createElement(TableBody, null, _isLoading ? /*#__PURE__*/React__default.createElement(StyledTableRow, null, /*#__PURE__*/React__default.createElement(TableCell, {
+  }), /*#__PURE__*/React__default.createElement(TableBody, null, _isLoading ? /*#__PURE__*/React__default.createElement(TableRow, {
+    className: classes.styledTableRow
+  }, /*#__PURE__*/React__default.createElement(TableCell, {
     colSpan: headers.length,
     align: "center"
   }, " ", /*#__PURE__*/React__default.createElement(CircularProgress, null))) : data.length !== 0 ? stableSort(data, getComparator(_order, _orderBy)).slice(_page * _rowsPerPage, _page * _rowsPerPage + _rowsPerPage).map(function (row, index) {
-    return /*#__PURE__*/React__default.createElement(StyledTableRow, {
+    return /*#__PURE__*/React__default.createElement(TableRow, {
       hover: true,
       role: "checkbox",
       tabIndex: -1,
       key: row.id,
-      id: row.id
+      id: row.id,
+      className: classes.styledTableRow
     }, headers.map(function (h, i) {
       if (h.id === 'sr') {
         return /*#__PURE__*/React__default.createElement(TableCell, {
@@ -2325,7 +2333,8 @@ function MkTable(props) {
       },
       size: dense ? "small" : "medium"
     }, /*#__PURE__*/React__default.createElement(EditIcon, null))));
-  }) : /*#__PURE__*/React__default.createElement(StyledTableRow, {
+  }) : /*#__PURE__*/React__default.createElement(TableRow, {
+    className: classes.styledTableRow,
     style: {
       width: '100%'
     }
@@ -2373,7 +2382,8 @@ MkTable.propTypes = {
   onChangePaginatePage: propTypes.any,
   onGetData: propTypes.any,
   onChangeRowPerPage: propTypes.any,
-  dense: propTypes.any
+  dense: propTypes.any,
+  styles: propTypes.any
 };
 
 var useStyles$2 = styles.makeStyles(function (theme) {

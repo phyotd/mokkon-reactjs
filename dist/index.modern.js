@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { InputBase, Grid, Box, Typography, TextField, NativeSelect, GridList, GridListTile, Dialog, DialogTitle, DialogContent, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Menu, MenuItem, DialogActions } from '@material-ui/core';
+import { InputBase, Grid, Box, Typography, TextField, NativeSelect, GridList, GridListTile, Dialog, DialogTitle, DialogContent, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton, createMuiTheme, ThemeProvider, Menu, MenuItem, DialogActions } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
@@ -1790,19 +1790,9 @@ function stableSort(array, comparator) {
   return stabilizedThis.map(el => el[0]);
 }
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: '#0d47a1a8',
-    color: theme.palette.common.white
-  },
-  body: {
-    fontSize: 14
-  }
-}))(TableCell$1);
-
 function EnhancedTableHead(props) {
   const {
-    classes,
+    headerStyles,
     _order,
     _orderBy,
     onRequestSort,
@@ -1813,7 +1803,24 @@ function EnhancedTableHead(props) {
     onRequestSort(event, property);
   };
 
-  return /*#__PURE__*/React.createElement(TableHead$1, null, /*#__PURE__*/React.createElement(TableRow$1, null, headCells.map(headCell => /*#__PURE__*/React.createElement(StyledTableCell, {
+  const sortedStyle = createMuiTheme({
+    overrides: {
+      MuiTableSortLabel: {
+        root: {
+          "&$active": {
+            color: headerStyles.sortedHeader === undefined ? 'grey' : headerStyles.sortedHeader,
+            "&& $icon": {
+              color: headerStyles.sortedHeader === undefined ? 'grey' : headerStyles.sortedHeader
+            }
+          }
+        }
+      }
+    }
+  });
+  return /*#__PURE__*/React.createElement(ThemeProvider, {
+    theme: sortedStyle
+  }, /*#__PURE__*/React.createElement(TableHead$1, null, /*#__PURE__*/React.createElement(TableRow$1, null, headCells.map(headCell => /*#__PURE__*/React.createElement(TableCell$1, {
+    className: headerStyles.head,
     key: headCell.id,
     align: headCell.numeric ? 'right' : 'left',
     padding: headCell.disablePadding ? 'none' : 'default',
@@ -1829,32 +1836,29 @@ function EnhancedTableHead(props) {
       whiteSpace: "nowrap"
     }
   }, headCell.label, _orderBy === headCell.id ? /*#__PURE__*/React.createElement("span", {
-    className: classes.visuallyHidden
+    className: headerStyles.visuallyHidden
   }, _order === 'desc' ? 'sorted descending' : 'sorted ascending') : null) : /*#__PURE__*/React.createElement(TableSortLabel, {
     hideSortIcon: "true",
     align: "right"
-  }, headCell.label))), /*#__PURE__*/React.createElement(StyledTableCell, {
+  }, headCell.label))), /*#__PURE__*/React.createElement(TableCell$1, {
+    className: headerStyles.head,
     style: {
       width: '100px'
     }
-  })));
+  }))));
 }
 
 EnhancedTableHead.propTypes = {
-  classes: propTypes.object.isRequired,
+  headerStyles: propTypes.object.isRequired,
   onRequestSort: propTypes.func.isRequired,
   onSelectAllClick: propTypes.func.isRequired,
   _order: propTypes.oneOf(['asc', 'desc']).isRequired,
   _orderBy: propTypes.string.isRequired,
   rowCount: propTypes.number.isRequired
 };
-const useStyles$1 = makeStyles(theme => ({
+const useStyles$1 = makeStyles({
   root: {
     width: '100%'
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2)
   },
   table: {
     tableLayout: 'fixed'
@@ -1878,19 +1882,19 @@ const useStyles$1 = makeStyles(theme => ({
       b_orderBottom: "none"
     }
   },
-  bomLink: {
-    cursor: "pointer",
-    color: theme.primary,
-    textDecoration: "underline"
-  }
-}));
-const StyledTableRow = withStyles(theme => ({
-  root: {
+  head: props => ({
+    backgroundColor: props.headerBackgroundColor === undefined ? '#0d47a1a8' : props.headerBackgroundColor,
+    color: props.headerTextColor === undefined ? 'white' : props.headerTextColor
+  }),
+  sortedHeader: props => ({
+    color: props.headerTextColor === undefined ? 'grey' : props.headerTextColor
+  }),
+  styledTableRow: props => ({
     '&:nth-of-type(even)': {
-      backgroundColor: '#0d47a11c'
+      backgroundColor: props.primaryColor === undefined ? '#0d47a11c' : props.primaryColor
     }
-  }
-}))(TableRow$1);
+  })
+});
 
 function getUpdatedDate(p) {
   var statusDate = p.updated_date;
@@ -2030,7 +2034,8 @@ ConfirmDialog.propTypes = {
 };
 
 function MkTable(props) {
-  const classes = useStyles$1();
+  console.log("props.styles:", props.styles);
+  const classes = useStyles$1(props.styles);
   const {
     dispatch,
     data = [],
@@ -2129,23 +2134,26 @@ function MkTable(props) {
     size: _dense ? 'small' : 'medium',
     "aria-label": "enhanced table"
   }, /*#__PURE__*/React.createElement(EnhancedTableHead, {
-    classes: classes,
+    headerStyles: classes,
     headCells: headers,
     _order: _order,
     _orderBy: _orderBy,
     onRequestSort: handleRequestSort,
     rowCount: data.length !== undefined ? data.length : 0,
     dispatch: dispatch
-  }), /*#__PURE__*/React.createElement(TableBody$1, null, _isLoading ? /*#__PURE__*/React.createElement(StyledTableRow, null, /*#__PURE__*/React.createElement(TableCell$1, {
+  }), /*#__PURE__*/React.createElement(TableBody$1, null, _isLoading ? /*#__PURE__*/React.createElement(TableRow$1, {
+    className: classes.styledTableRow
+  }, /*#__PURE__*/React.createElement(TableCell$1, {
     colSpan: headers.length,
     align: "center"
   }, " ", /*#__PURE__*/React.createElement(CircularProgress, null))) : data.length !== 0 ? stableSort(data, getComparator(_order, _orderBy)).slice(_page * _rowsPerPage, _page * _rowsPerPage + _rowsPerPage).map((row, index) => {
-    return /*#__PURE__*/React.createElement(StyledTableRow, {
+    return /*#__PURE__*/React.createElement(TableRow$1, {
       hover: true,
       role: "checkbox",
       tabIndex: -1,
       key: row.id,
-      id: row.id
+      id: row.id,
+      className: classes.styledTableRow
     }, headers.map((h, i) => {
       if (h.id === 'sr') {
         return /*#__PURE__*/React.createElement(TableCell$1, {
@@ -2200,7 +2208,8 @@ function MkTable(props) {
       onClick: event => handleRowEdit(row),
       size: dense ? "small" : "medium"
     }, /*#__PURE__*/React.createElement(EditIcon, null))));
-  }) : /*#__PURE__*/React.createElement(StyledTableRow, {
+  }) : /*#__PURE__*/React.createElement(TableRow$1, {
+    className: classes.styledTableRow,
     style: {
       width: '100%'
     }
@@ -2245,7 +2254,8 @@ MkTable.propTypes = {
   onChangePaginatePage: propTypes.any,
   onGetData: propTypes.any,
   onChangeRowPerPage: propTypes.any,
-  dense: propTypes.any
+  dense: propTypes.any,
+  styles: propTypes.any
 };
 
 const useStyles$2 = makeStyles(theme => ({
