@@ -11,7 +11,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { Box, Button, Dialog, DialogActions, DialogTitle, Grid, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Box, Button, createMuiTheme, Dialog, DialogActions, DialogTitle, Grid, IconButton, Menu, MenuItem, ThemeProvider } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
@@ -41,69 +41,87 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-const StyledTableCell = withStyles((theme) => ({
-    head: {
-        backgroundColor: '#0d47a1a8',
-        color: theme.palette.common.white,
-    },
-    body: {
-        fontSize: 14,
-    },
-}))(TableCell);
+// const StyledTableCell = withStyles((theme) => ({
+//     head: {
+//         backgroundColor: '#0d47a1a8',
+//         color: theme.palette.common.white,
+//     },
+//     body: {
+//         fontSize: 14,
+//     },
+// }))(TableCell);
 
 
 function EnhancedTableHead(props) {
-    const { classes, _order, _orderBy, onRequestSort, headCells } = props;
+    const { headerStyles, _order, _orderBy, onRequestSort, headCells } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
         // onGetData();
     };
 
-    return (
-        <TableHead>
-            <TableRow>
-                {headCells.map((headCell) => (
-                    <StyledTableCell
-                        key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
-                        padding={headCell.disablePadding ? 'none' : 'default'}
-                        sortDirection={_orderBy === headCell.id ? _order : false}
-                        style={{ width: headCell.id === 'sr' ? '15px' : headCell.width ? headCell.width : '' }}
-                    >
-                        {headCell.id !== 'sr' ?
-                            <TableSortLabel
-                                active={_orderBy === headCell.id}
-                                direction={_orderBy === headCell.id ? _order : 'asc'}
-                                onClick={createSortHandler(headCell.id)}
-                                style={{ whiteSpace: "nowrap" }}
-                            >
-                                {headCell.label}
-                                {_orderBy === headCell.id ? (
-                                    <span className={classes.visuallyHidden}>
-                                        {_order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                    </span>
-                                ) : null}
-                            </TableSortLabel>
-                            : <TableSortLabel
-                                hideSortIcon="true"
-                                align="right"
-                            >
-                                {headCell.label}
-
-                            </TableSortLabel>
+    const sortedStyle = createMuiTheme({
+        overrides: {
+            MuiTableSortLabel: {
+                root: {
+                    "&$active": {
+                        color: headerStyles.sortedHeader === undefined ? 'grey' : headerStyles.sortedHeader,
+                        "&& $icon": {
+                            color: headerStyles.sortedHeader === undefined ? 'grey' : headerStyles.sortedHeader
                         }
+                    }
+                }
+            }
+        }
+    });
 
-                    </StyledTableCell>
-                ))}
-                <StyledTableCell style={{ width: '100px' }} />
+    return (
+        <ThemeProvider theme={sortedStyle}>
+            <TableHead>
+                <TableRow>
+                    {headCells.map((headCell) => (
+                        <TableCell
+                            className={headerStyles.head}
+                            key={headCell.id}
+                            align={headCell.numeric ? 'right' : 'left'}
+                            padding={headCell.disablePadding ? 'none' : 'default'}
+                            sortDirection={_orderBy === headCell.id ? _order : false}
+                            style={{ width: headCell.id === 'sr' ? '15px' : headCell.width ? headCell.width : '' }}
+                        >
+                            {headCell.id !== 'sr' ?
+                                <TableSortLabel
+                                    active={_orderBy === headCell.id}
+                                    direction={_orderBy === headCell.id ? _order : 'asc'}
+                                    onClick={createSortHandler(headCell.id)}
+                                    style={{ whiteSpace: "nowrap" }}
+                                >
+                                    {headCell.label}
+                                    {_orderBy === headCell.id ? (
+                                        <span className={headerStyles.visuallyHidden}>
+                                            {_order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        </span>
+                                    ) : null}
+                                </TableSortLabel>
+                                : <TableSortLabel
+                                    hideSortIcon="true"
+                                    align="right"
+                                >
+                                    {headCell.label}
 
-            </TableRow>
-        </TableHead>
+                                </TableSortLabel>
+                            }
+
+                        </TableCell>
+                    ))}
+                    <TableCell className={headerStyles.head} style={{ width: '100px' }} />
+
+                </TableRow>
+            </TableHead>
+        </ThemeProvider>
     );
 }
 
 EnhancedTableHead.propTypes = {
-    classes: PropTypes.object.isRequired,
+    headerStyles: PropTypes.object.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
     _order: PropTypes.oneOf(['asc', 'desc']).isRequired,
@@ -111,13 +129,9 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     root: {
         width: '100%',
-    },
-    paper: {
-        width: '100%',
-        marginBottom: theme.spacing(2),
     },
     table: {
         // minWidth: 750,
@@ -142,20 +156,27 @@ const useStyles = makeStyles((theme) => ({
             b_orderBottom: "none"
         }
     },
-    bomLink: {
-        cursor: "pointer",
-        color: theme.primary,
-        textDecoration: "underline",
-    }
-}));
-
-const StyledTableRow = withStyles((theme) => ({
-    root: {
+    head: props => ({
+        backgroundColor: props.headerBackgroundColor === undefined ? '#0d47a1a8' : props.headerBackgroundColor,
+        color: props.headerTextColor === undefined ? 'white' : props.headerTextColor,
+    }),
+    sortedHeader: props => ({
+        color: props.headerTextColor === undefined ? 'grey' : props.headerTextColor,
+    }),
+    styledTableRow: props => ({
         '&:nth-of-type(even)': {
-            backgroundColor: '#0d47a11c',
+            backgroundColor: props.primaryColor === undefined ? '#0d47a11c' : props.primaryColor,
         },
-    },
-}))(TableRow);
+    }),
+});
+
+// const StyledTableRow = withStyles((theme) => ({
+//     root: {
+//         '&:nth-of-type(even)': {
+//             backgroundColor: '#0d47a11c',
+//         },
+//     },
+// }))(TableRow);
 
 function getUpdatedDate(p) {
     var statusDate = p.updated_date;
@@ -319,7 +340,8 @@ ConfirmDialog.propTypes = {
 };
 
 function MkTable(props) {
-    const classes = useStyles();
+    console.log("props.styles:", props.styles)
+    const classes = useStyles(props.styles);
     const { dispatch,
         data = [],
         headers = [],
@@ -335,7 +357,7 @@ function MkTable(props) {
         onGetData,
         onUpdateDataRow,
         onChangeRowPerPage,
-        dense = true
+        dense = true,
     } = props;
 
     const [_rowsPerPage, setRowsPerPage] = React.useState(rowsPerPage);
@@ -419,7 +441,6 @@ function MkTable(props) {
     };
 
     return (
-
         <div className={classes.root}>
             <Grid container>
                 <Grid item>
@@ -431,7 +452,7 @@ function MkTable(props) {
                             aria-label="enhanced table"
                         >
                             <EnhancedTableHead
-                                classes={classes}
+                                headerStyles={classes}
                                 headCells={headers}
                                 _order={_order}
                                 _orderBy={_orderBy}
@@ -441,19 +462,20 @@ function MkTable(props) {
                             />
 
                             <TableBody>
-                                {_isLoading ? <StyledTableRow >
+                                {_isLoading ? <TableRow className={classes.styledTableRow}>
                                     <TableCell colSpan={headers.length} align="center"> <CircularProgress /></TableCell>
-                                </StyledTableRow> :
+                                </TableRow> :
                                     (data.length !== 0 ? stableSort(data, getComparator(_order, _orderBy))
                                         .slice(_page * _rowsPerPage, _page * _rowsPerPage + _rowsPerPage)
                                         .map((row, index) => {
                                             return (
-                                                <StyledTableRow
+                                                <TableRow
                                                     hover
                                                     role="checkbox"
                                                     tabIndex={-1}
                                                     key={row.id}
                                                     id={row.id}
+                                                    className={classes.styledTableRow}
                                                 >
 
                                                     {headers.map((h, i) => {
@@ -483,10 +505,10 @@ function MkTable(props) {
                                                         : <TableCell style={{ width: '150px' }} align='right'>
                                                             <IconButton onClick={(event) => handleRowEdit(row)} size={dense ? "small" : "medium"}><EditIcon /></IconButton>
                                                         </TableCell>}
-                                                </StyledTableRow>
+                                                </TableRow>
 
                                             );
-                                        }) : <StyledTableRow style={{ width: '100%' }} />)}
+                                        }) : <TableRow className={classes.styledTableRow} style={{ width: '100%' }} />)}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -529,7 +551,8 @@ MkTable.propTypes = {
     onChangePaginatePage: PropTypes.any,
     onGetData: PropTypes.any,
     onChangeRowPerPage: PropTypes.any,
-    dense: PropTypes.any
+    dense: PropTypes.any,
+    styles: PropTypes.any
 };
 
 export default (MkTable);
