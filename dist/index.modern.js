@@ -1,22 +1,26 @@
-import React$1 from 'react';
-import { InputBase, Grid, Box, Typography, TextField, NativeSelect, Button } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { InputBase, Grid, Box, Typography, TextField, NativeSelect, GridList, GridListTile, Dialog, DialogTitle, DialogContent, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Menu, MenuItem, DialogActions } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import '@material-ui/icons/Save';
-import '@material-ui/icons/Cancel';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Table$1 from '@material-ui/core/Table';
+import TableBody$1 from '@material-ui/core/TableBody';
+import TableCell$1 from '@material-ui/core/TableCell';
+import TableContainer$1 from '@material-ui/core/TableContainer';
+import TableHead$1 from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
+import TableRow$1 from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import '@material-ui/core/Typography';
+import EditIcon from '@material-ui/icons/Edit';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function List({
   groupName,
   members = []
 }) {
-  return /*#__PURE__*/React$1.createElement("div", null, /*#__PURE__*/React$1.createElement("h1", null, "1.0.3"), /*#__PURE__*/React$1.createElement("h5", null, "Group: ", /*#__PURE__*/React$1.createElement("em", null, groupName)), /*#__PURE__*/React$1.createElement("ul", null, /*#__PURE__*/React$1.createElement("p", null, "Members"), members.map(member => /*#__PURE__*/React$1.createElement("li", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "1.0.3"), /*#__PURE__*/React.createElement("h5", null, "Group: ", /*#__PURE__*/React.createElement("em", null, groupName)), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("p", null, "Members"), members.map(member => /*#__PURE__*/React.createElement("li", {
     key: member
   }, member))));
 }
@@ -1098,6 +1102,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 });
 
+const filter = createFilterOptions();
 const BootstrapInput = withStyles(theme => ({
   root: {
     'label + &': {
@@ -1152,36 +1157,69 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function FieldList(props) {
+function MButton(props) {
+  const classes = useStyles();
+  const {
+    action,
+    onCallback
+  } = props;
+
+  const handleAction = e => {
+    e.preventDefault();
+    onCallback(e);
+  };
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: classes.root
+  }, /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
+    variant: "contained",
+    style: {
+      float: 'right',
+      margin: "5px"
+    },
+    onClick: e => handleAction(e)
+  }, action.icon, action.label)));
+}
+
+MButton.propTypes = {
+  history: propTypes.object,
+  action: propTypes.object.isRequired,
+  onCallback: propTypes.func.isRequired
+};
+
+function MkForm(props) {
   const classes = useStyles();
   const {
     fields = [],
-    updateData = {},
-    onDataCallback
+    data = {},
+    onDropdownCreateNew,
+    actions = [],
+    partHeaders
   } = props;
-  const [data, setDataField] = React$1.useState(updateData != undefined ? updateData : {});
-  const [imgPreview, setImgPreviewPath] = React$1.useState(null);
+  const [_data, setDataField] = React.useState(data !== undefined ? data : {});
+  const [open, setOpen] = React.useState(false);
+  const [selectedPhoto, setSelectedPhoto] = React.useState("#");
 
   const handleTextString = (e, fieldName) => {
-    setDataField({ ...data,
+    setDataField({ ..._data,
       [fieldName]: e.target.value
     });
   };
 
   const handleTextNumber = (e, fieldName) => {
-    setDataField({ ...data,
+    setDataField({ ..._data,
       [fieldName]: e.target.value
     });
   };
 
   const handleTextMultiline = (e, fieldName) => {
-    setDataField({ ...data,
+    setDataField({ ..._data,
       [fieldName]: e.target.value
     });
   };
 
   const handleDate = (e, fieldName) => {
-    setDataField({ ...data,
+    setDataField({ ..._data,
       [fieldName]: e.target.value
     });
   };
@@ -1191,104 +1229,102 @@ function FieldList(props) {
     var selectedValue = e.target.options[selectedIndex].getAttribute('name');
     var fn = fieldName.split('_');
     var fieldId = fn[0] + '_' + 'id';
-    setDataField({ ...data,
+    setDataField({ ..._data,
       [fieldName]: selectedValue,
       [fieldId]: e.target.value
     });
   };
 
-  const handleImgUpload = (e, fieldName) => {
-    e.preventDefault();
-    let reader = new FileReader();
-    let file = e.target.files[0];
+  const handleCanCreateNew = data => {
+    onDropdownCreateNew(data);
+  };
 
-    reader.onloadend = () => {
-      setImgPreviewPath(reader.result);
-    };
-
-    reader.readAsDataURL(file);
-    setDataField({ ...data,
-      [fieldName]: e.target.files[0].name
+  const onChangeValue = (fieldName, value) => {
+    setDataField({ ..._data,
+      [fieldName]: value
     });
   };
 
-  const handleDataConfirm = () => {
-    onDataCallback(data);
-  };
+  const onFileChange = (e, f) => {};
 
-  return /*#__PURE__*/React$1.createElement("div", {
+  const handleSelectItemDialog = () => {};
+
+  return /*#__PURE__*/React.createElement("div", {
     className: classes.root
-  }, /*#__PURE__*/React$1.createElement(Grid, {
+  }, /*#__PURE__*/React.createElement(Grid, {
     container: true
-  }, /*#__PURE__*/React$1.createElement(Grid, {
+  }, /*#__PURE__*/React.createElement(Grid, {
     item: true,
-    xs: 11
+    xs: 12
   }, fields.map((f, i) => {
-    if (f.type == 'text_string') {
-      return /*#__PURE__*/React$1.createElement(Grid, {
-        key: f.fieldName,
+    if (f.type === 'text_string') {
+      return /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
         container: true,
         style: {
           display: 'flex',
           alignItems: 'center',
           marginBottom: '10px'
         }
-      }, /*#__PURE__*/React$1.createElement(Grid, {
+      }, /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 5
-      }, /*#__PURE__*/React$1.createElement(Box, {
+      }, /*#__PURE__*/React.createElement(Box, {
         style: {
           width: '150px'
         }
-      }, /*#__PURE__*/React$1.createElement(Typography, {
+      }, /*#__PURE__*/React.createElement(Typography, {
         style: {
           paddingRight: '30px',
           color: 'grey'
         }
-      }, f.label))), /*#__PURE__*/React$1.createElement(Grid, {
+      }, f.label))), /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 7
-      }, /*#__PURE__*/React$1.createElement(TextField, {
-        id: f.fieldName,
+      }, /*#__PURE__*/React.createElement(TextField, {
+        id: f.field_name,
         variant: "outlined",
         autoComplete: "off",
         size: "small",
         style: {
           width: '100%'
         },
-        value: data != undefined ? data[f.fieldName] : null,
-        onChange: e => handleTextString(e, f.fieldName)
+        InputProps: {
+          readOnly: f.readOnly ? f.readOnly : false
+        },
+        value: _data !== undefined ? _data[f.field_name] : '',
+        onChange: e => handleTextString(e, f.field_name)
       })));
-    } else if (f.type == 'text_number') {
-      return /*#__PURE__*/React$1.createElement(Grid, {
-        key: f.fieldName,
+    } else if (f.type === 'text_number') {
+      return /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
         container: true,
         style: {
           display: 'flex',
           alignItems: 'center',
           marginBottom: '10px'
         }
-      }, /*#__PURE__*/React$1.createElement(Grid, {
+      }, /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 5
-      }, /*#__PURE__*/React$1.createElement(Box, {
+      }, /*#__PURE__*/React.createElement(Box, {
         style: {
           width: '150px'
         }
-      }, /*#__PURE__*/React$1.createElement(Typography, {
+      }, /*#__PURE__*/React.createElement(Typography, {
         style: {
           paddingRight: '30px',
           color: 'grey'
         }
-      }, f.label))), /*#__PURE__*/React$1.createElement(Grid, {
+      }, f.label))), /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 7
-      }, /*#__PURE__*/React$1.createElement(TextField, {
-        id: f.fieldName,
+      }, /*#__PURE__*/React.createElement(TextField, {
+        id: f.field_name,
         variant: "outlined",
         autoComplete: "off",
         size: "small",
@@ -1296,37 +1332,37 @@ function FieldList(props) {
           width: '100%'
         },
         type: "number",
-        value: data != undefined ? data[f.fieldName] : '',
-        onChange: e => handleTextNumber(e, f.fieldName)
+        value: _data !== undefined ? _data[f.field_name] : '',
+        onChange: e => handleTextNumber(e, f.field_name)
       })));
-    } else if (f.type == 'text_multiline') {
-      return /*#__PURE__*/React$1.createElement(Grid, {
-        key: f.fieldName,
+    } else if (f.type === 'text_multiline') {
+      return /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
         container: true,
         style: {
           display: 'flex',
           alignItems: 'center',
           marginBottom: '10px'
         }
-      }, /*#__PURE__*/React$1.createElement(Grid, {
+      }, /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 5
-      }, /*#__PURE__*/React$1.createElement(Box, {
+      }, /*#__PURE__*/React.createElement(Box, {
         style: {
           width: '150px'
         }
-      }, /*#__PURE__*/React$1.createElement(Typography, {
+      }, /*#__PURE__*/React.createElement(Typography, {
         style: {
           paddingRight: '30px',
           color: 'grey'
         }
-      }, f.label))), /*#__PURE__*/React$1.createElement(Grid, {
+      }, f.label))), /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 7
-      }, /*#__PURE__*/React$1.createElement(TextField, {
-        id: f.fieldName,
+      }, /*#__PURE__*/React.createElement(TextField, {
+        id: f.field_name,
         multiline: true,
         autoComplete: "off",
         rows: 3,
@@ -1334,266 +1370,482 @@ function FieldList(props) {
         style: {
           width: '100%'
         },
-        value: data != undefined ? data[f.fieldName] : '',
+        value: _data !== undefined ? _data[f.field_name] : '',
         variant: "outlined",
-        onChange: e => handleTextMultiline(e, f.fieldName)
+        onChange: e => handleTextMultiline(e, f.field_name)
       })));
-    } else if (f.type == 'date') {
-      return /*#__PURE__*/React$1.createElement(Grid, {
-        key: f.fieldName,
+    } else if (f.type === 'date') {
+      return /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
         container: true,
         style: {
           display: 'flex',
           alignItems: 'center',
           marginBottom: '10px'
         }
-      }, /*#__PURE__*/React$1.createElement(Grid, {
+      }, /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 5
-      }, /*#__PURE__*/React$1.createElement(Box, {
+      }, /*#__PURE__*/React.createElement(Box, {
         style: {
           width: '150px'
         }
-      }, /*#__PURE__*/React$1.createElement(Typography, {
+      }, /*#__PURE__*/React.createElement(Typography, {
         style: {
           paddingRight: '30px',
           color: 'grey'
         }
-      }, f.label))), /*#__PURE__*/React$1.createElement(Grid, {
+      }, f.label))), /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 7
-      }, /*#__PURE__*/React$1.createElement(TextField, {
-        id: f.fieldName,
+      }, /*#__PURE__*/React.createElement(TextField, {
+        id: f.field_name,
         variant: "outlined",
         autoComplete: "off",
         size: "small",
-        value: data != undefined ? data[f.fieldName] : '',
+        value: _data !== undefined ? _data[f.field_name] : '',
         type: "date",
         style: {
           width: '100%'
         },
-        onChange: e => handleDate(e, f.fieldName)
+        onChange: e => handleDate(e, f.field_name)
       })));
-    } else if (f.type == 'photo') {
-      return /*#__PURE__*/React$1.createElement(Grid, {
-        key: f.fieldName,
+    } else if (f.type === 'dropdown') {
+      if (f.options !== undefined && f.option_label_field !== undefined) {
+        if (f.field_name === 'priority') {
+          return /*#__PURE__*/React.createElement(Grid, {
+            key: f.field_name,
+            container: true,
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '10px'
+            }
+          }, /*#__PURE__*/React.createElement(Grid, {
+            item: true,
+            xs: 12,
+            sm: 5
+          }, /*#__PURE__*/React.createElement(Box, {
+            style: {
+              width: '150px'
+            }
+          }, /*#__PURE__*/React.createElement(Typography, {
+            style: {
+              paddingRight: '30px',
+              color: 'grey'
+            }
+          }, f.label))), /*#__PURE__*/React.createElement(Grid, {
+            item: true,
+            xs: 12,
+            sm: 7
+          }, /*#__PURE__*/React.createElement(NativeSelect, {
+            value: _data !== undefined ? _data[f.field_name] : '',
+            onChange: e => handleDropDownChange(e, f.field_name),
+            id: f.field_name,
+            input: /*#__PURE__*/React.createElement(BootstrapInput, null),
+            style: {
+              width: '100%'
+            }
+          }, /*#__PURE__*/React.createElement("option", {
+            "aria-label": "None",
+            value: ""
+          }, "Select"), f.options.map((d, i) => {
+            return /*#__PURE__*/React.createElement("option", {
+              name: d.name,
+              value: d.id,
+              key: d.id
+            }, d.name);
+          }))));
+        } else {
+          return /*#__PURE__*/React.createElement(Grid, {
+            key: f.field_name,
+            container: true,
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '10px'
+            }
+          }, /*#__PURE__*/React.createElement(Grid, {
+            item: true,
+            xs: 12,
+            sm: 5
+          }, /*#__PURE__*/React.createElement(Box, {
+            style: {
+              width: '150px'
+            }
+          }, /*#__PURE__*/React.createElement(Typography, {
+            style: {
+              paddingRight: '30px',
+              color: 'grey'
+            }
+          }, f.label))), /*#__PURE__*/React.createElement(Grid, {
+            item: true,
+            xs: 12,
+            sm: 7
+          }, /*#__PURE__*/React.createElement(Autocomplete, {
+            id: "combo-box-demo",
+            options: f.options,
+            getOptionLabel: option => {
+              if (typeof option === 'string') {
+                return option;
+              }
+
+              return option[f.option_label_field];
+            },
+            style: {
+              width: '100%'
+            },
+            size: "small",
+            value: _data !== undefined ? _data[f.field_name] ? _data[f.field_name] : " " : " ",
+            filterOptions: (options, params) => {
+              console.log("Autocomplete", f.can_create);
+
+              if (f.can_create) {
+                var newFilter = ['+ Add New'];
+                var filtered = filter(options, params);
+                return [...newFilter, ...filtered];
+              } else {
+                var _filtered = filter(options, params);
+
+                return _filtered;
+              }
+            },
+            onChange: (event, newValue) => {
+              if (typeof newValue === 'string') {
+                console.log('f.field_name', f.field_name, " f.can_create", f.can_create);
+                var d = {
+                  "canCreate": f.can_create,
+                  "fields": f.fields,
+                  "name": f.name,
+                  "fieldName": f.field_name
+                };
+                handleCanCreateNew(d);
+              } else {
+                if (newValue != null && newValue.inputValue !== '' && newValue.product_desc !== "") {
+                  onChangeValue(f.field_name, newValue[f.option_label_field]);
+                }
+              }
+            },
+            renderInput: params => /*#__PURE__*/React.createElement(TextField, Object.assign({}, params, {
+              variant: "outlined"
+            }))
+          })));
+        }
+      }
+    } else if (f.type === 'photo_list') {
+      console.log('photo_list:', _data);
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
         container: true,
         style: {
           display: 'flex',
           alignItems: 'center',
           marginBottom: '10px'
         }
-      }, /*#__PURE__*/React$1.createElement(Grid, {
+      }, /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 5
-      }, /*#__PURE__*/React$1.createElement(Box, {
+      }, /*#__PURE__*/React.createElement(Box, {
         style: {
           width: '150px'
         }
-      }, /*#__PURE__*/React$1.createElement(Typography, {
+      }, /*#__PURE__*/React.createElement(Typography, {
         style: {
           paddingRight: '30px',
           color: 'grey'
         }
-      }, f.label))), /*#__PURE__*/React$1.createElement(Grid, {
+      }, f.label))), /*#__PURE__*/React.createElement(Grid, {
         item: true,
         xs: 12,
         sm: 7
-      }, /*#__PURE__*/React$1.createElement("img", {
-        src: imgPreview == null ? data['photo_url'] : imgPreview,
+      }, /*#__PURE__*/React.createElement("div", {
         style: {
-          width: '120px',
-          height: '120px',
-          border: '1px solid grey'
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '10px'
         }
-      }), /*#__PURE__*/React$1.createElement("input", {
+      }, /*#__PURE__*/React.createElement("form", null, /*#__PURE__*/React.createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/React.createElement("input", {
         type: "file",
-        id: "img-upload",
-        onChange: e => handleImgUpload(e, f.fieldName)
+        name: "imgCollection",
+        onChange: e => onFileChange(),
+        multiple: true
+      })))))), _data[f.field_name] !== undefined && _data[f.field_name].length !== 0 ? /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
+        container: true,
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '10px'
+        }
+      }, /*#__PURE__*/React.createElement(Grid, {
+        item: true,
+        xs: 12
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: 'block',
+          alignItems: 'center',
+          marginBottom: '10px'
+        }
+      }, /*#__PURE__*/React.createElement(GridList, {
+        className: classes.gridList
+      }, _data[f.field_name] === undefined ? /*#__PURE__*/React.createElement("span", null) : _data[f.field_name].map(tile => /*#__PURE__*/React.createElement(GridListTile, {
+        key: tile,
+        style: {
+          width: '100px',
+          height: '100px'
+        }
+      }, /*#__PURE__*/React.createElement("img", {
+        src: tile,
+        alt: tile,
+        onClick: e => {
+          setOpen(true);
+        }
+      })))))), /*#__PURE__*/React.createElement(Dialog, {
+        maxWidth: "lg",
+        "aria-labelledby": "customized-dialog-title",
+        open: open
+      }, /*#__PURE__*/React.createElement(DialogTitle, {
+        id: "customized-dialog-title",
+        onClose: e => setOpen(false)
+      }, "Photos"), /*#__PURE__*/React.createElement(DialogContent, {
+        dividers: true
+      }, /*#__PURE__*/React.createElement(Grid, {
+        item: true,
+        xs: 12
+      }, /*#__PURE__*/React.createElement(Grid, null, /*#__PURE__*/React.createElement("img", {
+        src: selectedPhoto,
+        className: "show-img",
+        alt: "logo"
+      })), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Grid, {
+        container: true,
+        spacing: 3
+      }, _data[f.field_name].length > 0 ? _data[f.field_name].map(value => /*#__PURE__*/React.createElement(Grid, {
+        key: value,
+        item: true
+      }, /*#__PURE__*/React.createElement(Box, {
+        className: "square"
+      }, " ", /*#__PURE__*/React.createElement("img", {
+        src: value,
+        className: "thumnail-img",
+        alt: "logo",
+        onClick: e => setSelectedPhoto(value)
+      })))) : /*#__PURE__*/React.createElement("span", null)))))) : /*#__PURE__*/React.createElement(Grid, null));
+    } else if (f.type === 'list') {
+      console.log('list', _data[f.field_name]);
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
+        container: true,
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '10px'
+        }
+      }, /*#__PURE__*/React.createElement(Grid, {
+        item: true,
+        xs: 12,
+        sm: 5
+      }, /*#__PURE__*/React.createElement(Box, {
+        style: {
+          width: '150px'
+        }
+      }, /*#__PURE__*/React.createElement(Typography, {
+        style: {
+          paddingRight: '30px',
+          color: 'grey'
+        }
+      }, f.label))), /*#__PURE__*/React.createElement(Grid, {
+        item: true,
+        xs: 12,
+        sm: 7
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: 'block',
+          alignItems: 'center',
+          marginBottom: '10px'
+        }
+      }, /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
+        onClick: handleSelectItemDialog
+      }, /*#__PURE__*/React.createElement(AddIcon, null)))))), /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
+        container: true,
+        style: {
+          display: 'block',
+          alignItems: 'center',
+          marginBottom: '10px'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: 'block',
+          alignItems: 'center',
+          marginBottom: '10px'
+        }
+      }, /*#__PURE__*/React.createElement(TableContainer, null, /*#__PURE__*/React.createElement(Table, {
+        className: classes.table,
+        size: "small",
+        "aria-label": "a dense table"
+      }, /*#__PURE__*/React.createElement(TableHead, null, /*#__PURE__*/React.createElement(TableRow, null, partHeaders.map((h, i) => {
+        return /*#__PURE__*/React.createElement(TableCell, {
+          key: h.id,
+          align: "left"
+        }, h.label);
+      }))), /*#__PURE__*/React.createElement(TableBody, null, _data[f.field_name].length > 0 ? _data[f.field_name].map(row => /*#__PURE__*/React.createElement(TableRow, {
+        key: row.name
+      }, partHeaders.map((h, i) => {
+        return /*#__PURE__*/React.createElement(TableCell, {
+          key: h.id,
+          align: h.numeric ? 'right' : 'left'
+        }, row[h.id]);
+      }))) : /*#__PURE__*/React.createElement("span", null)))))));
+    } else if (f.type === 'time') {
+      return /*#__PURE__*/React.createElement(Grid, {
+        key: f.field_name,
+        container: true,
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '10px'
+        }
+      }, /*#__PURE__*/React.createElement(Grid, {
+        item: true,
+        xs: 12,
+        sm: 5
+      }, /*#__PURE__*/React.createElement(Box, {
+        style: {
+          width: '150px'
+        }
+      }, /*#__PURE__*/React.createElement(Typography, {
+        style: {
+          paddingRight: '30px',
+          color: 'grey'
+        }
+      }, f.label))), /*#__PURE__*/React.createElement(Grid, {
+        item: true,
+        xs: 12,
+        sm: 7
+      }, " ", /*#__PURE__*/React.createElement(TextField, {
+        id: "time",
+        variant: "outlined",
+        size: "small",
+        type: "time",
+        className: classes.textField,
+        InputLabelProps: {
+          shrink: true
+        },
+        inputProps: {
+          step: 300
+        }
       })));
-    } else if (f.type == 'dropdown') {
-      if (f.fieldName == 'priority') {
-        return /*#__PURE__*/React$1.createElement(Grid, {
-          key: f.fieldName,
-          container: true,
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '10px'
-          }
-        }, /*#__PURE__*/React$1.createElement(Grid, {
-          item: true,
-          xs: 12,
-          sm: 5
-        }, /*#__PURE__*/React$1.createElement(Box, {
-          style: {
-            width: '150px'
-          }
-        }, /*#__PURE__*/React$1.createElement(Typography, {
-          style: {
-            paddingRight: '30px',
-            color: 'grey'
-          }
-        }, f.label))), /*#__PURE__*/React$1.createElement(Grid, {
-          item: true,
-          xs: 12,
-          sm: 7
-        }, /*#__PURE__*/React$1.createElement(NativeSelect, {
-          id: "demo-customized-select-native",
-          value: data != undefined ? data[f.fieldName] : '',
-          onChange: e => handleDropDownChange(e, f.fieldName),
-          id: f.fieldName,
-          input: /*#__PURE__*/React$1.createElement(BootstrapInput, null),
-          style: {
-            width: '100%'
-          }
-        }, /*#__PURE__*/React$1.createElement("option", {
-          "aria-label": "None",
-          value: ""
-        }, "Select"), f.options.map((d, i) => {
-          return /*#__PURE__*/React$1.createElement("option", {
-            name: d.name,
-            value: d.id
-          }, d.name);
-        }))));
-      } else {
-        var fn = f.fieldName.split('_');
-        var fieldId = fn[0] + '_' + 'id';
-        return /*#__PURE__*/React$1.createElement(Grid, {
-          key: f.fieldName,
-          container: true,
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '10px'
-          }
-        }, /*#__PURE__*/React$1.createElement(Grid, {
-          item: true,
-          xs: 12,
-          sm: 5
-        }, /*#__PURE__*/React$1.createElement(Box, {
-          style: {
-            width: '150px'
-          }
-        }, /*#__PURE__*/React$1.createElement(Typography, {
-          style: {
-            paddingRight: '30px',
-            color: 'grey'
-          }
-        }, f.label))), /*#__PURE__*/React$1.createElement(Grid, {
-          item: true,
-          xs: 12,
-          sm: 7
-        }, /*#__PURE__*/React$1.createElement(NativeSelect, {
-          id: "demo-customized-select-native",
-          value: data != undefined ? data[fieldId] : '',
-          onChange: e => handleDropDownChange(e, f.fieldName),
-          id: f.fieldName,
-          input: /*#__PURE__*/React$1.createElement(BootstrapInput, null),
-          style: {
-            width: '100%'
-          }
-        }, /*#__PURE__*/React$1.createElement("option", {
-          "aria-label": "None",
-          value: ""
-        }, "Select"), f.options.map((d, i) => {
-          return /*#__PURE__*/React$1.createElement("option", {
-            name: d.name,
-            value: d.id
-          }, d.name);
-        }))));
-      }
-    } else if (f.type == 'checkbox') {
-      return /*#__PURE__*/React$1.createElement(Grid, null);
-    } else if (f.type == 'radio') {
-      return /*#__PURE__*/React$1.createElement(Grid, null);
     }
-  })), /*#__PURE__*/React$1.createElement(Grid, {
+  })), actions.length > 0 ? /*#__PURE__*/React.createElement(Grid, {
     item: true,
-    xs: 11
-  }, /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
-    style: {
-      float: 'right'
-    },
-    onClick: handleDataConfirm
-  }, " Confirm")))));
+    xs: 12
+  }, actions.map(a => {
+    if (a.status === _data.status) {
+      return /*#__PURE__*/React.createElement(MButton, {
+        action: a,
+        onCallback: event => a.callback(event, _data)
+      });
+    }
+  })) : /*#__PURE__*/React.createElement(Grid, null)));
 }
 
-FieldList.propTypes = {
+MkForm.propTypes = {
   history: propTypes.object,
   fields: propTypes.array.isRequired,
-  updateData: propTypes.object,
-  onDataCallback: propTypes.func
+  data: propTypes.object,
+  isNew: propTypes.bool,
+  actions: propTypes.array,
+  onDropdownCreateNew: propTypes.func
 };
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
+function descendingComparator(a, b, _orderBy) {
+  if (b[_orderBy] < a[_orderBy]) {
     return -1;
   }
 
-  if (b[orderBy] > a[orderBy]) {
+  if (b[_orderBy] > a[_orderBy]) {
     return 1;
   }
 
   return 0;
 }
 
-function getComparator(order, orderBy) {
-  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+function getComparator(_order, _orderBy) {
+  return _order === 'desc' ? (a, b) => descendingComparator(a, b, _orderBy) : (a, b) => -descendingComparator(a, b, _orderBy);
 }
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
+    const _order = comparator(a[0], b[0]);
+
+    if (_order !== 0) return _order;
     return a[1] - b[1];
   });
   return stabilizedThis.map(el => el[0]);
 }
 
+const StyledTableCell = withStyles(theme => ({
+  head: {
+    backgroundColor: '#0d47a1a8',
+    color: theme.palette.common.white
+  },
+  body: {
+    fontSize: 14
+  }
+}))(TableCell$1);
+
 function EnhancedTableHead(props) {
   const {
     classes,
-    order,
-    orderBy,
+    _order,
+    _orderBy,
     onRequestSort,
-    onRefreshData,
     headCells
   } = props;
 
   const createSortHandler = property => event => {
     onRequestSort(event, property);
-    onRefreshData();
   };
 
-  return /*#__PURE__*/React$1.createElement(TableHead, null, /*#__PURE__*/React$1.createElement(TableRow, null, headCells.map(headCell => /*#__PURE__*/React$1.createElement(TableCell, {
+  return /*#__PURE__*/React.createElement(TableHead$1, null, /*#__PURE__*/React.createElement(TableRow$1, null, headCells.map(headCell => /*#__PURE__*/React.createElement(StyledTableCell, {
     key: headCell.id,
     align: headCell.numeric ? 'right' : 'left',
     padding: headCell.disablePadding ? 'none' : 'default',
-    sortDirection: orderBy === headCell.id ? order : false
-  }, headCell.id != 'id' ? /*#__PURE__*/React$1.createElement(TableSortLabel, {
-    active: orderBy === headCell.id,
-    direction: orderBy === headCell.id ? order : 'asc',
-    onClick: createSortHandler(headCell.id)
-  }, headCell.label, orderBy === headCell.id ? /*#__PURE__*/React$1.createElement("span", {
+    sortDirection: _orderBy === headCell.id ? _order : false,
+    style: {
+      width: headCell.id === 'sr' ? '15px' : headCell.width ? headCell.width : ''
+    }
+  }, headCell.id !== 'sr' ? /*#__PURE__*/React.createElement(TableSortLabel, {
+    active: _orderBy === headCell.id,
+    direction: _orderBy === headCell.id ? _order : 'asc',
+    onClick: createSortHandler(headCell.id),
+    style: {
+      whiteSpace: "nowrap"
+    }
+  }, headCell.label, _orderBy === headCell.id ? /*#__PURE__*/React.createElement("span", {
     className: classes.visuallyHidden
-  }, order === 'desc' ? 'sorted descending' : 'sorted ascending') : null) : /*#__PURE__*/React$1.createElement(TableSortLabel, {
-    hideSortIcon: true
-  }, headCell.label)))));
+  }, _order === 'desc' ? 'sorted descending' : 'sorted ascending') : null) : /*#__PURE__*/React.createElement(TableSortLabel, {
+    hideSortIcon: "true",
+    align: "right"
+  }, headCell.label))), /*#__PURE__*/React.createElement(StyledTableCell, {
+    style: {
+      width: '100px'
+    }
+  })));
 }
 
 EnhancedTableHead.propTypes = {
   classes: propTypes.object.isRequired,
-  numSelected: propTypes.number.isRequired,
   onRequestSort: propTypes.func.isRequired,
-  onRefreshData: propTypes.func.isRequired,
   onSelectAllClick: propTypes.func.isRequired,
-  order: propTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: propTypes.string.isRequired,
+  _order: propTypes.oneOf(['asc', 'desc']).isRequired,
+  _orderBy: propTypes.string.isRequired,
   rowCount: propTypes.number.isRequired
 };
 const useStyles$1 = makeStyles(theme => ({
@@ -1605,10 +1857,10 @@ const useStyles$1 = makeStyles(theme => ({
     marginBottom: theme.spacing(2)
   },
   table: {
-    minWidth: 750
+    tableLayout: 'fixed'
   },
   visuallyHidden: {
-    border: 0,
+    b_order: 0,
     clip: 'rect(0 0 0 0)',
     height: 1,
     margin: -1,
@@ -1620,156 +1872,380 @@ const useStyles$1 = makeStyles(theme => ({
   },
   underline: {
     "&&&:before": {
-      borderBottom: "none"
+      b_orderBottom: "none"
     },
     "&&:after": {
-      borderBottom: "none"
+      b_orderBottom: "none"
     }
+  },
+  bomLink: {
+    cursor: "pointer",
+    color: theme.primary,
+    textDecoration: "underline"
   }
 }));
+const StyledTableRow = withStyles(theme => ({
+  root: {
+    '&:nth-of-type(even)': {
+      backgroundColor: '#0d47a11c'
+    }
+  }
+}))(TableRow$1);
 
-function TableTemplate(props) {
+function getUpdatedDate(p) {
+  var statusDate = p.updated_date;
+  var day = '';
+
+  if (statusDate !== undefined) {
+    var convertDate = new Date(statusDate.toDate());
+    var dd = String(convertDate.getDate()).padStart(2, '0');
+    var mm = String(convertDate.getMonth() + 1).padStart(2, '0');
+    var yyyy = convertDate.getFullYear();
+    day = mm + '/' + dd + '/' + yyyy;
+  }
+
+  return day.toString();
+}
+
+function RowMenu(props) {
+  const {
+    row,
+    actions,
+    onSelectedAction,
+    onRowEdit
+  } = props;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenuClick = event => {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleSelectMenu = (e, row, action) => {
+    e.stopPropagation();
+    onSelectedAction(row, action.action_name);
+    setAnchorEl(null);
+  };
+
+  const handleClose = e => {
+    setAnchorEl(null);
+    e.stopPropagation();
+  };
+
+  const handleEdit = e => {
+    onRowEdit(row);
+    e.stopPropagation();
+  };
+
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Menu, {
+    id: `actions-${row.id}`,
+    anchorEl: anchorEl,
+    keepMounted: true,
+    open: Boolean(anchorEl),
+    onClose: handleClose
+  }, actions.map(action => {
+    return /*#__PURE__*/React.createElement(MenuItem, {
+      key: action.display_name,
+      onClick: e => handleSelectMenu(e, row, action)
+    }, action.display_name);
+  })), /*#__PURE__*/React.createElement(Grid, {
+    container: true,
+    direction: "row",
+    justify: "flex-end",
+    alignItems: "center",
+    style: {
+      display: 'flex'
+    }
+  }, /*#__PURE__*/React.createElement(IconButton, {
+    id: `edit-${row.id}`,
+    "aria-label": "more",
+    "aria-controls": "long-menu",
+    "aria-haspopup": "true",
+    onClick: handleEdit,
+    size: "small"
+  }, /*#__PURE__*/React.createElement(EditIcon, null)), /*#__PURE__*/React.createElement(Box, {
+    style: {
+      width: '10px'
+    }
+  }), /*#__PURE__*/React.createElement(IconButton, {
+    id: `dropdown-${row.id}`,
+    "aria-label": "more",
+    "aria-controls": "long-menu",
+    "aria-haspopup": "true",
+    size: "small",
+    onClick: handleMenuClick
+  }, /*#__PURE__*/React.createElement(ExpandMore, null))));
+}
+
+RowMenu.propTypes = {
+  row: propTypes.object.isRequired,
+  actions: propTypes.array.isRequired,
+  onSelectedAction: propTypes.func.isRequired,
+  onRowEdit: propTypes.func
+};
+
+function ConfirmDialog(props) {
+  const {
+    type,
+    itemName,
+    openDialog,
+    onCancel,
+    onContinue
+  } = props;
+  const [open, setOpen] = React.useState(openDialog);
+
+  const handleClose = () => {
+    setOpen(false);
+    onCancel(false);
+  };
+
+  const handleContinue = () => {
+    onContinue(true);
+  };
+
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Dialog, {
+    open: open,
+    onClose: handleClose,
+    "aria-labelledby": "alert-dialog-title",
+    "aria-describedby": "alert-dialog-description"
+  }, /*#__PURE__*/React.createElement(DialogTitle, {
+    id: "alert-dialog-title"
+  }, "Delete this " + type + ' "' + itemName + '"?'), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
+    onClick: handleClose,
+    color: "primary"
+  }, "Cancel"), /*#__PURE__*/React.createElement(Button, {
+    onClick: handleContinue,
+    color: "primary",
+    autoFocus: true
+  }, "Delete"))));
+}
+
+ConfirmDialog.propTypes = {
+  history: propTypes.object,
+  type: propTypes.string,
+  itemName: propTypes.string,
+  openDialog: propTypes.bool,
+  onCancel: propTypes.func,
+  onContinue: propTypes.func
+};
+
+function MkTable(props) {
   const classes = useStyles$1();
   const {
+    dispatch,
     data = [],
     headers = [],
-    onUpdateData,
-    onReloadData,
-    onChangePage,
-    onChangeRowsPerPage,
-    rowsPerPage = 10,
-    page = 0,
-    order = 'asc',
-    orderBy
+    actions,
+    onActions,
+    title,
+    page,
+    rowsPerPage,
+    noMoreToLoad = false,
+    order,
+    orderBy,
+    isLoading = false,
+    onChangePaginatePage,
+    onGetData,
+    onUpdateDataRow,
+    onChangeRowPerPage,
+    dense = true
   } = props;
-  const [selected, setSelected] = React$1.useState([]);
-  const [dense, setDense] = React$1.useState(false);
-  const [rowDataPerPage, setRowsPerPage] = React$1.useState(rowsPerPage != undefined ? rowsPerPage : 10);
-  const [paginatePage, setPage] = React$1.useState(page != undefined ? page : 0);
-  const [paginateOrder, setOrder] = React$1.useState(order != undefined ? order : 'asc');
-  const [paginateOrderBy, setOrderBy] = React$1.useState(orderBy != undefined ? orderBy : 'name');
-  var offset = paginatePage * rowDataPerPage;
+  const [_rowsPerPage, setRowsPerPage] = React.useState(rowsPerPage);
+  const [_page, setPage] = React.useState(page);
+  const [_noMoreToLoad, setNoMoreToLoad] = React.useState(noMoreToLoad);
+  const [_order, setOrder] = React.useState(order);
+  const [_orderBy, setOrderBy] = React.useState(orderBy);
+  const [_isLoading, setIsLoading] = React.useState(isLoading);
+  const [_isConfirm, setIsConfirm] = React.useState(false);
+  const [itemName, setItemName] = React.useState('');
+  const [row, setRow] = React.useState({});
+  const [action, setAction] = React.useState('');
+  const [_dense, setDense] = React.useState(dense);
+
+  const handleSelectMenu = (row, action) => {
+    if (action === 'delete') {
+      setItemName(row.name === undefined ? row.product_desc : row.name);
+      setIsConfirm(true);
+      setRow(row);
+      setAction(action);
+    } else {
+      onActions(row, action);
+    }
+  };
+
+  const handleDelete = v => {
+    setIsConfirm(false);
+    onActions(row, action);
+  };
+
+  const handleCancel = v => {
+    setIsConfirm(false);
+  };
+
+  const handleRowEdit = row => {
+    onUpdateDataRow(row);
+  };
+
+  var offset = _page * _rowsPerPage;
+  useEffect(() => {
+    setNoMoreToLoad(noMoreToLoad);
+    setPage(page);
+    setOrder(order);
+    setOrderBy(orderBy);
+    setIsLoading(isLoading);
+    setRowsPerPage(rowsPerPage);
+    setDense(dense);
+  }, []);
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
+    const isAsc = _orderBy === property && _order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = event => {
-    if (event.target.checked) {
-      const newSelecteds = data.map(n => n.name);
-      setSelected(newSelecteds);
-      return;
+  const handleChangePage = (event, newPage) => {
+    if (!_noMoreToLoad && (newPage + 1) * _rowsPerPage >= data.length) {
+      onGetData();
     }
 
-    setSelected([]);
-  };
-
-  const handleClick = (event, rowdata) => {
-    onUpdateData(true, rowdata);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    onChangePage(newPage);
-  };
-
-  const handleReloadData = () => {
-    onReloadData();
+    setPage(newPage);
+    onChangePaginatePage(newPage);
   };
 
   const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    onChangeRowsPerPage(parseInt(event.target.value));
-    onReloadData();
+    setRowsPerPage(parseInt(event.target.value));
+    onChangeRowPerPage(parseInt(event.target.value));
   };
 
-  const isSelected = name => selected.indexOf(name) !== -1;
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-  return /*#__PURE__*/React$1.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", {
     className: classes.root
-  }, /*#__PURE__*/React$1.createElement(Grid, {
+  }, /*#__PURE__*/React.createElement(Grid, {
     container: true
-  }, /*#__PURE__*/React$1.createElement(Grid, {
-    item: true,
-    style: {
-      marginRight: '10%'
-    }
-  }, /*#__PURE__*/React$1.createElement(TableContainer, null, /*#__PURE__*/React$1.createElement(Table, {
+  }, /*#__PURE__*/React.createElement(Grid, {
+    item: true
+  }, /*#__PURE__*/React.createElement(TableContainer$1, null, /*#__PURE__*/React.createElement(Table$1, {
     className: classes.table,
     "aria-labelledby": "tableTitle",
-    size: dense ? 'small' : 'medium',
+    size: _dense ? 'small' : 'medium',
     "aria-label": "enhanced table"
-  }, /*#__PURE__*/React$1.createElement(EnhancedTableHead, {
+  }, /*#__PURE__*/React.createElement(EnhancedTableHead, {
     classes: classes,
-    numSelected: selected.length,
     headCells: headers,
-    order: order,
-    orderBy: orderBy,
-    onSelectAllClick: handleSelectAllClick,
+    _order: _order,
+    _orderBy: _orderBy,
     onRequestSort: handleRequestSort,
-    onRefreshData: handleReloadData,
-    rowCount: data.length
-  }), /*#__PURE__*/React$1.createElement(TableBody, null, data.length != 0 ? stableSort(data, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-    const isItemSelected = isSelected(row.name);
-    return /*#__PURE__*/React$1.createElement(TableRow, {
+    rowCount: data.length !== undefined ? data.length : 0,
+    dispatch: dispatch
+  }), /*#__PURE__*/React.createElement(TableBody$1, null, _isLoading ? /*#__PURE__*/React.createElement(StyledTableRow, null, /*#__PURE__*/React.createElement(TableCell$1, {
+    colSpan: headers.length,
+    align: "center"
+  }, " ", /*#__PURE__*/React.createElement(CircularProgress, null))) : data.length !== 0 ? stableSort(data, getComparator(_order, _orderBy)).slice(_page * _rowsPerPage, _page * _rowsPerPage + _rowsPerPage).map((row, index) => {
+    return /*#__PURE__*/React.createElement(StyledTableRow, {
       hover: true,
-      onClick: event => handleClick(event, row),
       role: "checkbox",
-      "aria-checked": isItemSelected,
       tabIndex: -1,
-      key: index,
-      selected: isItemSelected
+      key: row.id,
+      id: row.id
     }, headers.map((h, i) => {
-      if (h.id == 'id') {
-        return /*#__PURE__*/React$1.createElement(TableCell, {
+      if (h.id === 'sr') {
+        return /*#__PURE__*/React.createElement(TableCell$1, {
           key: h.id,
-          align: "right"
+          align: "right",
+          style: {
+            width: '15px'
+          }
         }, ++offset);
-      } else {
-        return /*#__PURE__*/React$1.createElement(TableCell, {
+      }
+
+      if (h.id === 'status') {
+        return /*#__PURE__*/React.createElement(TableCell$1, {
           key: h.id,
-          align: "right"
+          align: h.numeric ? 'right' : 'left'
         }, row[h.id]);
       }
-    }));
-  }) : /*#__PURE__*/React$1.createElement("div", null), emptyRows > 0 && /*#__PURE__*/React$1.createElement(TableRow, {
+
+      if (h.id === 'updated_date') {
+        return /*#__PURE__*/React.createElement(TableCell$1, {
+          key: h.id,
+          align: h.numeric ? 'right' : 'left',
+          style: {
+            width: h.width ? h.width : null
+          }
+        }, getUpdatedDate(row));
+      } else {
+        return /*#__PURE__*/React.createElement(TableCell$1, {
+          key: h.id,
+          align: h.numeric ? 'right' : 'left',
+          style: {
+            width: h.width ? h.width : null
+          }
+        }, row[h.id]);
+      }
+    }), actions ? /*#__PURE__*/React.createElement(TableCell$1, {
+      style: {
+        width: '150px'
+      },
+      align: "right"
+    }, /*#__PURE__*/React.createElement(RowMenu, {
+      actions: actions,
+      row: row,
+      onRowEdit: data => handleRowEdit(data),
+      onSelectedAction: (data, actionName) => handleSelectMenu(data, actionName)
+    })) : /*#__PURE__*/React.createElement(TableCell$1, {
+      style: {
+        width: '150px'
+      },
+      align: "right"
+    }, /*#__PURE__*/React.createElement(IconButton, {
+      onClick: event => handleRowEdit(row),
+      size: dense ? "small" : "medium"
+    }, /*#__PURE__*/React.createElement(EditIcon, null))));
+  }) : /*#__PURE__*/React.createElement(StyledTableRow, {
     style: {
-      height: (dense ? 33 : 53) * emptyRows
+      width: '100%'
     }
-  }, /*#__PURE__*/React$1.createElement(TableCell, {
-    colSpan: 6
-  }))))), /*#__PURE__*/React$1.createElement(TablePagination, {
-    rowsPerPageOptions: [5, 10, 20, 30],
-    labelDisplayedRows: function ({
+  })))), /*#__PURE__*/React.createElement(TablePagination, {
+    rowsPerPageOptions: [10, 30, 50],
+    labelDisplayedRows: ({
       from,
       to,
       count
-    }) {},
+    }) => {
+      console.log(from, to, count);
+    },
     component: "div",
     count: data.length,
-    rowsPerPage: rowsPerPage,
-    rowsPerPage: rowsPerPage,
-    page: page,
+    rowsPerPage: _rowsPerPage,
+    page: _page,
     onChangePage: handleChangePage,
     onChangeRowsPerPage: handleChangeRowsPerPage
-  }))));
+  }))), _isConfirm ? /*#__PURE__*/React.createElement(ConfirmDialog, {
+    type: title,
+    itemName: itemName,
+    openDialog: _isConfirm,
+    onCancel: v => handleCancel(),
+    onContinue: v => handleDelete()
+  }) : /*#__PURE__*/React.createElement("div", null));
 }
 
-TableTemplate.propTypes = {
+MkTable.propTypes = {
   history: propTypes.object,
   headers: propTypes.array.isRequired,
   data: propTypes.array.isRequired,
-  onUpdateData: propTypes.func,
-  onReloadData: propTypes.func,
-  onChangePage: propTypes.func,
-  onChangeRowsPerPage: propTypes.func,
   query: propTypes.object,
-  page: propTypes.any,
-  rowsPerPage: propTypes.any,
+  onProductBOMClick: propTypes.func,
+  onActions: propTypes.func,
+  actions: propTypes.array,
+  title: propTypes.string,
   order: propTypes.any,
-  orderBy: propTypes.any
+  orderBy: propTypes.any,
+  rowsPerPage: propTypes.any,
+  noMoreToLoad: propTypes.any,
+  isLoading: propTypes.any,
+  onChangePaginatePage: propTypes.any,
+  onGetData: propTypes.any,
+  onChangeRowPerPage: propTypes.any,
+  dense: propTypes.any
 };
 
 const useStyles$2 = makeStyles(theme => ({
@@ -1804,7 +2280,6 @@ const useStyles$2 = makeStyles(theme => ({
   },
   button: {
     color: 'white',
-    color: theme.palette.primary.main,
     width: 150,
     height: 55
   },
@@ -1819,11 +2294,6 @@ const useStyles$2 = makeStyles(theme => ({
     float: "left",
     color: theme.palette.primary.main,
     fontWeight: "bold"
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary
   }
 }));
 
@@ -1831,7 +2301,7 @@ function getDataString(data, fieldName) {
   return data[fieldName];
 }
 
-function InfoPage(props) {
+function MkInfo(props) {
   const classes = useStyles$2();
   const {
     infoData,
@@ -1841,52 +2311,39 @@ function InfoPage(props) {
     currentTabName,
     actions
   } = props;
-  const [editable, setEditable] = React$1.useState(isEditable != undefined ? isEditable : true);
-  const [data, setData] = React$1.useState({});
+  const [editable, setEditable] = React.useState(isEditable !== undefined ? isEditable : true);
 
   const handleEdit = () => {
     setEditable(false);
   };
 
-  const handleUpdateData = data => {
-    console.log('handle update date:', data);
-    setData(data);
-  };
-
-  return /*#__PURE__*/React$1.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", {
     className: classes.root
-  }, isNew ? /*#__PURE__*/React$1.createElement(Grid, {
+  }, isNew ? /*#__PURE__*/React.createElement(Grid, {
     container: true,
     style: {
       marginTop: '30px'
     }
-  }, /*#__PURE__*/React$1.createElement(Grid, {
+  }, /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 12,
     sm: 7
-  }, /*#__PURE__*/React$1.createElement(FieldList, {
-    updateData: infoData,
-    fields: displayFields,
-    isNew: isNew,
-    onDataCallback: d => handleUpdateData(d)
-  }))) : /*#__PURE__*/React$1.createElement(Grid, {
+  })) : /*#__PURE__*/React.createElement(Grid, {
     container: true,
     style: {
       marginTop: '30px'
     }
-  }, /*#__PURE__*/React$1.createElement(Grid, {
+  }, /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 12,
     sm: 7
-  }, !editable ? /*#__PURE__*/React$1.createElement(FieldList, {
-    fields: displayFields,
-    isNew: isNew,
-    updateData: infoData,
-    onDataCallback: d => handleUpdateData(d)
-  }) : displayFields.map((d, i) => {
-    return /*#__PURE__*/React$1.createElement(Grid, {
-      container: true
-    }, /*#__PURE__*/React$1.createElement(Grid, {
+  }, !editable ?
+  /*#__PURE__*/
+  React.createElement("div", null) : displayFields.map((d, i) => {
+    return /*#__PURE__*/React.createElement(Grid, {
+      container: true,
+      key: i
+    }, /*#__PURE__*/React.createElement(Grid, {
       item: true,
       xs: 12,
       style: {
@@ -1894,106 +2351,97 @@ function InfoPage(props) {
         alignItems: 'center',
         marginBottom: '10px'
       }
-    }, /*#__PURE__*/React$1.createElement(Grid, {
+    }, /*#__PURE__*/React.createElement(Grid, {
       item: true,
       xs: 12,
       sm: 5
-    }, /*#__PURE__*/React$1.createElement(Box, {
+    }, /*#__PURE__*/React.createElement(Box, {
       style: {
         width: '250px'
       }
-    }, /*#__PURE__*/React$1.createElement(Typography, {
+    }, /*#__PURE__*/React.createElement(Typography, {
       style: {
         paddingRight: '30px',
         color: 'grey'
       }
-    }, d.label))), /*#__PURE__*/React$1.createElement(Grid, {
+    }, d.label))), /*#__PURE__*/React.createElement(Grid, {
       item: true,
       xs: 12,
       sm: 7
-    }, d.type == 'photo' ? /*#__PURE__*/React$1.createElement("img", {
-      src: infoData['photo_url'],
-      style: {
-        width: '120px',
-        height: '120px',
-        border: '1px solid grey'
-      }
-    }) : /*#__PURE__*/React$1.createElement(Typography, {
+    }, d.type === 'photo' ? /*#__PURE__*/React.createElement("img", null) :
+    /*#__PURE__*/
+    React.createElement(Typography, {
       style: {
         paddingRight: '30px'
       }
-    }, infoData != undefined ? getDataString(infoData, d.fieldName) : ''))));
-  })), /*#__PURE__*/React$1.createElement(Grid, {
+    }, infoData !== undefined ? getDataString(infoData, d.fieldName) : ''))));
+  })), /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 12,
     sm: 7
-  }, /*#__PURE__*/React$1.createElement(Grid, {
+  }, /*#__PURE__*/React.createElement(Grid, {
     container: true,
     direction: "row",
     alignItems: "flex-end"
   }, actions.map((a, i) => {
-    if (currentTabName == 'account') {
-      if (infoData.status == 'invited') {
-        return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+    if (currentTabName === 'account') {
+      if (infoData.status === 'invited') {
+        return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
           style: {
             color: 'white',
             backgroundColor: 'grey',
             float: 'right',
             marginLeft: '10px'
-          },
-          onClick: () => a.callback(data)
+          }
         }, a.label));
       }
 
-      if (infoData.status == 'joined') {
-        return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+      if (infoData.status === 'joined') {
+        return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
           style: {
             color: 'white',
             backgroundColor: 'grey',
             float: 'right',
             marginLeft: '10px'
-          },
-          onClick: () => a.callback(data)
+          }
         }, a.label));
       }
 
-      if (infoData.status == 'disabled') {
-        return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+      if (infoData.status === 'disabled') {
+        return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
           style: {
             color: 'white',
             backgroundColor: 'grey',
             float: 'right',
             marginLeft: '10px'
-          },
-          onClick: () => a.callback(data)
+          }
         }, a.label));
       }
 
-      if (infoData.status == 'requested') {
+      if (infoData.status === 'requested') {
         if (editable) {
-          return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+          return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
             style: {
               marginLeft: '10px'
             },
             onClick: handleEdit
           }, a.icon, a.label));
         } else {
-          return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+          return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
             style: {
               color: 'white',
               backgroundColor: 'grey',
               float: 'right',
               marginLeft: '10px'
-            },
-            onClick: () => a.callback(data)
+            }
           }, a.label));
         }
       }
     } else {
       if (editable) {
-        if (a.action_type == 'edit') {
+        if (a.action_type === 'edit') {
           console.log('type: ', a.action_type, 'editable: ', editable);
-          return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+          return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
             style: {
               marginLeft: '10px'
             },
@@ -2001,32 +2449,29 @@ function InfoPage(props) {
           }, a.icon, a.label));
         }
 
-        if (a.action_type == 'delete') {
-          return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+        if (a.action_type === 'delete') {
+          return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
             style: {
               float: 'right',
               marginLeft: '10px'
-            },
-            onClick: () => a.callback(data)
+            }
           }, a.icon, a.label));
         }
       } else {
-        if (a.action_type == 'save') {
-          return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+        if (a.action_type === 'save') {
+          return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
             style: {
               marginLeft: '10px'
-            },
-            onClick: () => a.callback(data)
+            }
           }, a.icon, a.label));
         }
 
-        if (a.action_type == 'cancel') {
-          return /*#__PURE__*/React$1.createElement(Box, null, /*#__PURE__*/React$1.createElement(Button, {
+        if (a.action_type === 'cancel') {
+          return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
             style: {
               float: 'right',
               marginLeft: '10px'
-            },
-            onClick: () => a.callback(data)
+            }
           }, a.icon, a.label));
         }
       }
@@ -2034,7 +2479,7 @@ function InfoPage(props) {
   })))));
 }
 
-InfoPage.propTypes = {
+MkInfo.propTypes = {
   history: propTypes.object,
   infoData: propTypes.object,
   displayFields: propTypes.array,
@@ -2043,13 +2488,5 @@ InfoPage.propTypes = {
   actions: propTypes.any
 };
 
-function CheckboxList() {
-  return /*#__PURE__*/React.createElement("div", null, "checkbox list");
-}
-
-function RadioList() {
-  return /*#__PURE__*/React.createElement("div", null, "radio list");
-}
-
-export { CheckboxList, FieldList, InfoPage, List, RadioList, TableTemplate };
+export { List, MkForm, MkInfo, MkTable };
 //# sourceMappingURL=index.modern.js.map
