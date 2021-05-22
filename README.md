@@ -16,7 +16,7 @@ Mokkon's reactjs components
 **Field object**
 
 | Name        | Type           | Default  | Description
-| ------------- |-------------| -----:| -------- |
+| ------------- |-------------| -----| -------- |
 | field_name      | string |  | Field name 
 | label      | string      |  | Field label |
 | type      | string      |  | Field type <ul><li>dropdown</li><li>text_string</li><li>Propstext_number</li><li>text_multiline</li><li>list</li><li>photo_list</li><li>date</li><li>time</li></ul>|
@@ -24,6 +24,7 @@ Mokkon's reactjs components
 | can_create      | boolean      |  | To handle adding new object from dropdown or autocomplete |
 | readonly      | boolean      |  | To handle for not editable form |
 | option_label_field      | string      |  | Field name to get label of option in dropdown |
+| style      | object      | { headerBackgroundColor: '#0d47a1a8', headerTextcolor: 'white' , primaryColor:'#0d47a11c' } | style object<br/><br/>Table Header's background color: ***headerBackgroundColor*** <br/>Table Text's color: ***headerTextcolor*** <br/>Table even row's background color: ***primaryColor*** <br/><br/> Example: <br/>{ headerBackgroundColor: 'green', headerTextcolor: 'white' , primaryColor:'lightBlue' } |
 
  
  **Example of field object** 

@@ -16,13 +16,33 @@ import EditIcon from '@material-ui/icons/Edit';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-function List({
-  groupName,
-  members = []
-}) {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "1.0.3"), /*#__PURE__*/React.createElement("h5", null, "Group: ", /*#__PURE__*/React.createElement("em", null, groupName)), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("p", null, "Members"), members.map(member => /*#__PURE__*/React.createElement("li", {
-    key: member
-  }, member))));
+function List(_ref) {
+  var groupName = _ref.groupName,
+      _ref$members = _ref.members,
+      members = _ref$members === void 0 ? [] : _ref$members;
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "1.0.3"), /*#__PURE__*/React.createElement("h5", null, "Group: ", /*#__PURE__*/React.createElement("em", null, groupName)), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("p", null, "Members"), members.map(function (member) {
+    return /*#__PURE__*/React.createElement("li", {
+      key: member
+    }, member);
+  })));
+}
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
 }
 
 function createCommonjsModule(fn, module) {
@@ -1102,69 +1122,71 @@ if (process.env.NODE_ENV !== 'production') {
 }
 });
 
-const filter = createFilterOptions();
-const BootstrapInput = withStyles(theme => ({
-  root: {
-    'label + &': {
-      marginTop: theme.spacing(3)
-    }
-  },
-  input: {
-    borderRadius: 4,
-    position: 'relative',
-    backgroundColor: 'transparent',
-    border: '1px solid #ced4da',
-    fontSize: 16,
-    padding: '10px 26px 10px 12px',
-    transition: theme.transitions.create(['border-color', 'box-shadow']),
-    fontFamily: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'].join(','),
-    '&:focus': {
-      borderRadius: 4,
-      borderColor: '#80bdff',
-      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)'
-    }
-  }
-}))(InputBase);
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%'
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2)
-  },
-  table: {
-    minWidth: 750
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1
-  },
-  underline: {
-    "&&&:before": {
-      borderBottom: "none"
+var filter = createFilterOptions();
+var BootstrapInput = withStyles(function (theme) {
+  return {
+    root: {
+      'label + &': {
+        marginTop: theme.spacing(3)
+      }
     },
-    "&&:after": {
-      borderBottom: "none"
+    input: {
+      borderRadius: 4,
+      position: 'relative',
+      backgroundColor: 'transparent',
+      border: '1px solid #ced4da',
+      fontSize: 16,
+      padding: '10px 26px 10px 12px',
+      transition: theme.transitions.create(['border-color', 'box-shadow']),
+      fontFamily: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'].join(','),
+      '&:focus': {
+        borderRadius: 4,
+        borderColor: '#80bdff',
+        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)'
+      }
     }
-  }
-}));
+  };
+})(InputBase);
+var useStyles = makeStyles(function (theme) {
+  return {
+    root: {
+      width: '100%'
+    },
+    paper: {
+      width: '100%',
+      marginBottom: theme.spacing(2)
+    },
+    table: {
+      minWidth: 750
+    },
+    visuallyHidden: {
+      border: 0,
+      clip: 'rect(0 0 0 0)',
+      height: 1,
+      margin: -1,
+      overflow: 'hidden',
+      padding: 0,
+      position: 'absolute',
+      top: 20,
+      width: 1
+    },
+    underline: {
+      "&&&:before": {
+        borderBottom: "none"
+      },
+      "&&:after": {
+        borderBottom: "none"
+      }
+    }
+  };
+});
 
 function MButton(props) {
-  const classes = useStyles();
-  const {
-    action,
-    onCallback
-  } = props;
+  var classes = useStyles();
+  var action = props.action,
+      onCallback = props.onCallback;
 
-  const handleAction = e => {
+  var handleAction = function handleAction(e) {
     e.preventDefault();
     onCallback(e);
   };
@@ -1174,10 +1196,12 @@ function MButton(props) {
   }, /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
     variant: "contained",
     style: {
-      float: 'right',
+      "float": 'right',
       margin: "5px"
     },
-    onClick: e => handleAction(e)
+    onClick: function onClick(e) {
+      return handleAction(e);
+    }
   }, action.icon, action.label)));
 }
 
@@ -1188,66 +1212,75 @@ MButton.propTypes = {
 };
 
 function MkForm(props) {
-  const classes = useStyles();
-  const {
-    fields = [],
-    data = {},
-    onDropdownCreateNew,
-    actions = [],
-    partHeaders
-  } = props;
-  const [_data, setDataField] = React.useState(data !== undefined ? data : {});
-  const [open, setOpen] = React.useState(false);
-  const [selectedPhoto, setSelectedPhoto] = React.useState("#");
+  var classes = useStyles();
+  var _props$fields = props.fields,
+      fields = _props$fields === void 0 ? [] : _props$fields,
+      _props$data = props.data,
+      data = _props$data === void 0 ? {} : _props$data,
+      onDropdownCreateNew = props.onDropdownCreateNew,
+      _props$actions = props.actions,
+      actions = _props$actions === void 0 ? [] : _props$actions,
+      partHeaders = props.partHeaders;
 
-  const handleTextString = (e, fieldName) => {
-    setDataField({ ..._data,
-      [fieldName]: e.target.value
-    });
+  var _React$useState = React.useState(data !== undefined ? data : {}),
+      _data = _React$useState[0],
+      setDataField = _React$useState[1];
+
+  var _React$useState2 = React.useState(false),
+      open = _React$useState2[0],
+      setOpen = _React$useState2[1];
+
+  var _React$useState3 = React.useState("#"),
+      selectedPhoto = _React$useState3[0],
+      setSelectedPhoto = _React$useState3[1];
+
+  var handleTextString = function handleTextString(e, fieldName) {
+    var _extends2;
+
+    setDataField(_extends({}, _data, (_extends2 = {}, _extends2[fieldName] = e.target.value, _extends2)));
   };
 
-  const handleTextNumber = (e, fieldName) => {
-    setDataField({ ..._data,
-      [fieldName]: e.target.value
-    });
+  var handleTextNumber = function handleTextNumber(e, fieldName) {
+    var _extends3;
+
+    setDataField(_extends({}, _data, (_extends3 = {}, _extends3[fieldName] = e.target.value, _extends3)));
   };
 
-  const handleTextMultiline = (e, fieldName) => {
-    setDataField({ ..._data,
-      [fieldName]: e.target.value
-    });
+  var handleTextMultiline = function handleTextMultiline(e, fieldName) {
+    var _extends4;
+
+    setDataField(_extends({}, _data, (_extends4 = {}, _extends4[fieldName] = e.target.value, _extends4)));
   };
 
-  const handleDate = (e, fieldName) => {
-    setDataField({ ..._data,
-      [fieldName]: e.target.value
-    });
+  var handleDate = function handleDate(e, fieldName) {
+    var _extends5;
+
+    setDataField(_extends({}, _data, (_extends5 = {}, _extends5[fieldName] = e.target.value, _extends5)));
   };
 
-  const handleDropDownChange = (e, fieldName) => {
+  var handleDropDownChange = function handleDropDownChange(e, fieldName) {
+    var _extends6;
+
     var selectedIndex = e.target.options.selectedIndex;
     var selectedValue = e.target.options[selectedIndex].getAttribute('name');
     var fn = fieldName.split('_');
     var fieldId = fn[0] + '_' + 'id';
-    setDataField({ ..._data,
-      [fieldName]: selectedValue,
-      [fieldId]: e.target.value
-    });
+    setDataField(_extends({}, _data, (_extends6 = {}, _extends6[fieldName] = selectedValue, _extends6[fieldId] = e.target.value, _extends6)));
   };
 
-  const handleCanCreateNew = data => {
+  var handleCanCreateNew = function handleCanCreateNew(data) {
     onDropdownCreateNew(data);
   };
 
-  const onChangeValue = (fieldName, value) => {
-    setDataField({ ..._data,
-      [fieldName]: value
-    });
+  var onChangeValue = function onChangeValue(fieldName, value) {
+    var _extends7;
+
+    setDataField(_extends({}, _data, (_extends7 = {}, _extends7[fieldName] = value, _extends7)));
   };
 
-  const onFileChange = (e, f) => {};
+  var onFileChange = function onFileChange(e, f) {};
 
-  const handleSelectItemDialog = () => {};
+  var handleSelectItemDialog = function handleSelectItemDialog() {};
 
   return /*#__PURE__*/React.createElement("div", {
     className: classes.root
@@ -1256,7 +1289,7 @@ function MkForm(props) {
   }, /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 12
-  }, fields.map((f, i) => {
+  }, fields.map(function (f, i) {
     if (f.type === 'text_string') {
       return /*#__PURE__*/React.createElement(Grid, {
         key: f.field_name,
@@ -1295,7 +1328,9 @@ function MkForm(props) {
           readOnly: f.readOnly ? f.readOnly : false
         },
         value: _data !== undefined ? _data[f.field_name] : '',
-        onChange: e => handleTextString(e, f.field_name)
+        onChange: function onChange(e) {
+          return handleTextString(e, f.field_name);
+        }
       })));
     } else if (f.type === 'text_number') {
       return /*#__PURE__*/React.createElement(Grid, {
@@ -1333,7 +1368,9 @@ function MkForm(props) {
         },
         type: "number",
         value: _data !== undefined ? _data[f.field_name] : '',
-        onChange: e => handleTextNumber(e, f.field_name)
+        onChange: function onChange(e) {
+          return handleTextNumber(e, f.field_name);
+        }
       })));
     } else if (f.type === 'text_multiline') {
       return /*#__PURE__*/React.createElement(Grid, {
@@ -1372,7 +1409,9 @@ function MkForm(props) {
         },
         value: _data !== undefined ? _data[f.field_name] : '',
         variant: "outlined",
-        onChange: e => handleTextMultiline(e, f.field_name)
+        onChange: function onChange(e) {
+          return handleTextMultiline(e, f.field_name);
+        }
       })));
     } else if (f.type === 'date') {
       return /*#__PURE__*/React.createElement(Grid, {
@@ -1410,7 +1449,9 @@ function MkForm(props) {
         style: {
           width: '100%'
         },
-        onChange: e => handleDate(e, f.field_name)
+        onChange: function onChange(e) {
+          return handleDate(e, f.field_name);
+        }
       })));
     } else if (f.type === 'dropdown') {
       if (f.options !== undefined && f.option_label_field !== undefined) {
@@ -1442,7 +1483,9 @@ function MkForm(props) {
             sm: 7
           }, /*#__PURE__*/React.createElement(NativeSelect, {
             value: _data !== undefined ? _data[f.field_name] : '',
-            onChange: e => handleDropDownChange(e, f.field_name),
+            onChange: function onChange(e) {
+              return handleDropDownChange(e, f.field_name);
+            },
             id: f.field_name,
             input: /*#__PURE__*/React.createElement(BootstrapInput, null),
             style: {
@@ -1451,7 +1494,7 @@ function MkForm(props) {
           }, /*#__PURE__*/React.createElement("option", {
             "aria-label": "None",
             value: ""
-          }, "Select"), f.options.map((d, i) => {
+          }, "Select"), f.options.map(function (d, i) {
             return /*#__PURE__*/React.createElement("option", {
               name: d.name,
               value: d.id,
@@ -1487,7 +1530,7 @@ function MkForm(props) {
           }, /*#__PURE__*/React.createElement(Autocomplete, {
             id: "combo-box-demo",
             options: f.options,
-            getOptionLabel: option => {
+            getOptionLabel: function getOptionLabel(option) {
               if (typeof option === 'string') {
                 return option;
               }
@@ -1499,20 +1542,20 @@ function MkForm(props) {
             },
             size: "small",
             value: _data !== undefined ? _data[f.field_name] ? _data[f.field_name] : " " : " ",
-            filterOptions: (options, params) => {
+            filterOptions: function filterOptions(options, params) {
               console.log("Autocomplete", f.can_create);
 
               if (f.can_create) {
                 var newFilter = ['+ Add New'];
                 var filtered = filter(options, params);
-                return [...newFilter, ...filtered];
+                return [].concat(newFilter, filtered);
               } else {
                 var _filtered = filter(options, params);
 
                 return _filtered;
               }
             },
-            onChange: (event, newValue) => {
+            onChange: function onChange(event, newValue) {
               if (typeof newValue === 'string') {
                 console.log('f.field_name', f.field_name, " f.can_create", f.can_create);
                 var d = {
@@ -1528,9 +1571,11 @@ function MkForm(props) {
                 }
               }
             },
-            renderInput: params => /*#__PURE__*/React.createElement(TextField, Object.assign({}, params, {
-              variant: "outlined"
-            }))
+            renderInput: function renderInput(params) {
+              return /*#__PURE__*/React.createElement(TextField, _extends({}, params, {
+                variant: "outlined"
+              }));
+            }
           })));
         }
       }
@@ -1572,7 +1617,9 @@ function MkForm(props) {
       }, /*#__PURE__*/React.createElement("input", {
         type: "file",
         name: "imgCollection",
-        onChange: e => onFileChange(),
+        onChange: function onChange(e) {
+          return onFileChange();
+        },
         multiple: true
       })))))), _data[f.field_name] !== undefined && _data[f.field_name].length !== 0 ? /*#__PURE__*/React.createElement(Grid, {
         key: f.field_name,
@@ -1593,25 +1640,29 @@ function MkForm(props) {
         }
       }, /*#__PURE__*/React.createElement(GridList, {
         className: classes.gridList
-      }, _data[f.field_name] === undefined ? /*#__PURE__*/React.createElement("span", null) : _data[f.field_name].map(tile => /*#__PURE__*/React.createElement(GridListTile, {
-        key: tile,
-        style: {
-          width: '100px',
-          height: '100px'
-        }
-      }, /*#__PURE__*/React.createElement("img", {
-        src: tile,
-        alt: tile,
-        onClick: e => {
-          setOpen(true);
-        }
-      })))))), /*#__PURE__*/React.createElement(Dialog, {
+      }, _data[f.field_name] === undefined ? /*#__PURE__*/React.createElement("span", null) : _data[f.field_name].map(function (tile) {
+        return /*#__PURE__*/React.createElement(GridListTile, {
+          key: tile,
+          style: {
+            width: '100px',
+            height: '100px'
+          }
+        }, /*#__PURE__*/React.createElement("img", {
+          src: tile,
+          alt: tile,
+          onClick: function onClick(e) {
+            setOpen(true);
+          }
+        }));
+      })))), /*#__PURE__*/React.createElement(Dialog, {
         maxWidth: "lg",
         "aria-labelledby": "customized-dialog-title",
         open: open
       }, /*#__PURE__*/React.createElement(DialogTitle, {
         id: "customized-dialog-title",
-        onClose: e => setOpen(false)
+        onClose: function onClose(e) {
+          return setOpen(false);
+        }
       }, "Photos"), /*#__PURE__*/React.createElement(DialogContent, {
         dividers: true
       }, /*#__PURE__*/React.createElement(Grid, {
@@ -1624,17 +1675,21 @@ function MkForm(props) {
       })), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Grid, {
         container: true,
         spacing: 3
-      }, _data[f.field_name].length > 0 ? _data[f.field_name].map(value => /*#__PURE__*/React.createElement(Grid, {
-        key: value,
-        item: true
-      }, /*#__PURE__*/React.createElement(Box, {
-        className: "square"
-      }, " ", /*#__PURE__*/React.createElement("img", {
-        src: value,
-        className: "thumnail-img",
-        alt: "logo",
-        onClick: e => setSelectedPhoto(value)
-      })))) : /*#__PURE__*/React.createElement("span", null)))))) : /*#__PURE__*/React.createElement(Grid, null));
+      }, _data[f.field_name].length > 0 ? _data[f.field_name].map(function (value) {
+        return /*#__PURE__*/React.createElement(Grid, {
+          key: value,
+          item: true
+        }, /*#__PURE__*/React.createElement(Box, {
+          className: "square"
+        }, " ", /*#__PURE__*/React.createElement("img", {
+          src: value,
+          className: "thumnail-img",
+          alt: "logo",
+          onClick: function onClick(e) {
+            return setSelectedPhoto(value);
+          }
+        })));
+      }) : /*#__PURE__*/React.createElement("span", null)))))) : /*#__PURE__*/React.createElement(Grid, null));
     } else if (f.type === 'list') {
       console.log('list', _data[f.field_name]);
       return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Grid, {
@@ -1688,19 +1743,21 @@ function MkForm(props) {
         className: classes.table,
         size: "small",
         "aria-label": "a dense table"
-      }, /*#__PURE__*/React.createElement(TableHead, null, /*#__PURE__*/React.createElement(TableRow, null, partHeaders.map((h, i) => {
+      }, /*#__PURE__*/React.createElement(TableHead, null, /*#__PURE__*/React.createElement(TableRow, null, partHeaders.map(function (h, i) {
         return /*#__PURE__*/React.createElement(TableCell, {
           key: h.id,
           align: "left"
         }, h.label);
-      }))), /*#__PURE__*/React.createElement(TableBody, null, _data[f.field_name].length > 0 ? _data[f.field_name].map(row => /*#__PURE__*/React.createElement(TableRow, {
-        key: row.name
-      }, partHeaders.map((h, i) => {
-        return /*#__PURE__*/React.createElement(TableCell, {
-          key: h.id,
-          align: h.numeric ? 'right' : 'left'
-        }, row[h.id]);
-      }))) : /*#__PURE__*/React.createElement("span", null)))))));
+      }))), /*#__PURE__*/React.createElement(TableBody, null, _data[f.field_name].length > 0 ? _data[f.field_name].map(function (row) {
+        return /*#__PURE__*/React.createElement(TableRow, {
+          key: row.name
+        }, partHeaders.map(function (h, i) {
+          return /*#__PURE__*/React.createElement(TableCell, {
+            key: h.id,
+            align: h.numeric ? 'right' : 'left'
+          }, row[h.id]);
+        }));
+      }) : /*#__PURE__*/React.createElement("span", null)))))));
     } else if (f.type === 'time') {
       return /*#__PURE__*/React.createElement(Grid, {
         key: f.field_name,
@@ -1744,11 +1801,13 @@ function MkForm(props) {
   })), actions.length > 0 ? /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 12
-  }, actions.map(a => {
+  }, actions.map(function (a) {
     if (a.status === _data.status) {
       return /*#__PURE__*/React.createElement(MButton, {
         action: a,
-        onCallback: event => a.callback(event, _data)
+        onCallback: function onCallback(event) {
+          return a.callback(event, _data);
+        }
       });
     }
   })) : /*#__PURE__*/React.createElement(Grid, null)));
@@ -1776,34 +1835,42 @@ function descendingComparator(a, b, _orderBy) {
 }
 
 function getComparator(_order, _orderBy) {
-  return _order === 'desc' ? (a, b) => descendingComparator(a, b, _orderBy) : (a, b) => -descendingComparator(a, b, _orderBy);
+  return _order === 'desc' ? function (a, b) {
+    return descendingComparator(a, b, _orderBy);
+  } : function (a, b) {
+    return -descendingComparator(a, b, _orderBy);
+  };
 }
 
 function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const _order = comparator(a[0], b[0]);
+  var stabilizedThis = array.map(function (el, index) {
+    return [el, index];
+  });
+  stabilizedThis.sort(function (a, b) {
+    var _order = comparator(a[0], b[0]);
 
     if (_order !== 0) return _order;
     return a[1] - b[1];
   });
-  return stabilizedThis.map(el => el[0]);
+  return stabilizedThis.map(function (el) {
+    return el[0];
+  });
 }
 
 function EnhancedTableHead(props) {
-  const {
-    headerStyles,
-    _order,
-    _orderBy,
-    onRequestSort,
-    headCells
-  } = props;
+  var headerStyles = props.headerStyles,
+      _order = props._order,
+      _orderBy = props._orderBy,
+      onRequestSort = props.onRequestSort,
+      headCells = props.headCells;
 
-  const createSortHandler = property => event => {
-    onRequestSort(event, property);
+  var createSortHandler = function createSortHandler(property) {
+    return function (event) {
+      onRequestSort(event, property);
+    };
   };
 
-  const sortedStyle = createMuiTheme({
+  var sortedStyle = createMuiTheme({
     overrides: {
       MuiTableSortLabel: {
         root: {
@@ -1819,28 +1886,30 @@ function EnhancedTableHead(props) {
   });
   return /*#__PURE__*/React.createElement(ThemeProvider, {
     theme: sortedStyle
-  }, /*#__PURE__*/React.createElement(TableHead$1, null, /*#__PURE__*/React.createElement(TableRow$1, null, headCells.map(headCell => /*#__PURE__*/React.createElement(TableCell$1, {
-    className: headerStyles.head,
-    key: headCell.id,
-    align: headCell.numeric ? 'right' : 'left',
-    padding: headCell.disablePadding ? 'none' : 'default',
-    sortDirection: _orderBy === headCell.id ? _order : false,
-    style: {
-      width: headCell.id === 'sr' ? '15px' : headCell.width ? headCell.width : ''
-    }
-  }, headCell.id !== 'sr' ? /*#__PURE__*/React.createElement(TableSortLabel, {
-    active: _orderBy === headCell.id,
-    direction: _orderBy === headCell.id ? _order : 'asc',
-    onClick: createSortHandler(headCell.id),
-    style: {
-      whiteSpace: "nowrap"
-    }
-  }, headCell.label, _orderBy === headCell.id ? /*#__PURE__*/React.createElement("span", {
-    className: headerStyles.visuallyHidden
-  }, _order === 'desc' ? 'sorted descending' : 'sorted ascending') : null) : /*#__PURE__*/React.createElement(TableSortLabel, {
-    hideSortIcon: "true",
-    align: "right"
-  }, headCell.label))), /*#__PURE__*/React.createElement(TableCell$1, {
+  }, /*#__PURE__*/React.createElement(TableHead$1, null, /*#__PURE__*/React.createElement(TableRow$1, null, headCells.map(function (headCell) {
+    return /*#__PURE__*/React.createElement(TableCell$1, {
+      className: headerStyles.head,
+      key: headCell.id,
+      align: headCell.numeric ? 'right' : 'left',
+      padding: headCell.disablePadding ? 'none' : 'default',
+      sortDirection: _orderBy === headCell.id ? _order : false,
+      style: {
+        width: headCell.id === 'sr' ? '15px' : headCell.width ? headCell.width : ''
+      }
+    }, headCell.id !== 'sr' ? /*#__PURE__*/React.createElement(TableSortLabel, {
+      active: _orderBy === headCell.id,
+      direction: _orderBy === headCell.id ? _order : 'asc',
+      onClick: createSortHandler(headCell.id),
+      style: {
+        whiteSpace: "nowrap"
+      }
+    }, headCell.label, _orderBy === headCell.id ? /*#__PURE__*/React.createElement("span", {
+      className: headerStyles.visuallyHidden
+    }, _order === 'desc' ? 'sorted descending' : 'sorted ascending') : null) : /*#__PURE__*/React.createElement(TableSortLabel, {
+      hideSortIcon: "true",
+      align: "right"
+    }, headCell.label));
+  }), /*#__PURE__*/React.createElement(TableCell$1, {
     className: headerStyles.head,
     style: {
       width: '100px'
@@ -1856,7 +1925,7 @@ EnhancedTableHead.propTypes = {
   _orderBy: propTypes.string.isRequired,
   rowCount: propTypes.number.isRequired
 };
-const useStyles$1 = makeStyles({
+var useStyles$1 = makeStyles({
   root: {
     width: '100%'
   },
@@ -1882,18 +1951,24 @@ const useStyles$1 = makeStyles({
       b_orderBottom: "none"
     }
   },
-  head: props => ({
-    backgroundColor: props.headerBackgroundColor === undefined ? '#0d47a1a8' : props.headerBackgroundColor,
-    color: props.headerTextColor === undefined ? 'white' : props.headerTextColor
-  }),
-  sortedHeader: props => ({
-    color: props.headerTextColor === undefined ? 'grey' : props.headerTextColor
-  }),
-  styledTableRow: props => ({
-    '&:nth-of-type(even)': {
-      backgroundColor: props.primaryColor === undefined ? '#0d47a11c' : props.primaryColor
-    }
-  })
+  head: function head(props) {
+    return {
+      backgroundColor: props.headerBackgroundColor === undefined ? '#0d47a1a8' : props.headerBackgroundColor,
+      color: props.headerTextColor === undefined ? 'white' : props.headerTextColor
+    };
+  },
+  sortedHeader: function sortedHeader(props) {
+    return {
+      color: props.headerTextColor === undefined ? 'grey' : props.headerTextColor
+    };
+  },
+  styledTableRow: function styledTableRow(props) {
+    return {
+      '&:nth-of-type(even)': {
+        backgroundColor: props.primaryColor === undefined ? '#0d47a11c' : props.primaryColor
+      }
+    };
+  }
 });
 
 function getUpdatedDate(p) {
@@ -1912,45 +1987,48 @@ function getUpdatedDate(p) {
 }
 
 function RowMenu(props) {
-  const {
-    row,
-    actions,
-    onSelectedAction,
-    onRowEdit
-  } = props;
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  var row = props.row,
+      actions = props.actions,
+      onSelectedAction = props.onSelectedAction,
+      onRowEdit = props.onRowEdit;
 
-  const handleMenuClick = event => {
+  var _React$useState = React.useState(null),
+      anchorEl = _React$useState[0],
+      setAnchorEl = _React$useState[1];
+
+  var handleMenuClick = function handleMenuClick(event) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
-  const handleSelectMenu = (e, row, action) => {
+  var handleSelectMenu = function handleSelectMenu(e, row, action) {
     e.stopPropagation();
     onSelectedAction(row, action.action_name);
     setAnchorEl(null);
   };
 
-  const handleClose = e => {
+  var handleClose = function handleClose(e) {
     setAnchorEl(null);
     e.stopPropagation();
   };
 
-  const handleEdit = e => {
+  var handleEdit = function handleEdit(e) {
     onRowEdit(row);
     e.stopPropagation();
   };
 
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Menu, {
-    id: `actions-${row.id}`,
+    id: "actions-" + row.id,
     anchorEl: anchorEl,
     keepMounted: true,
     open: Boolean(anchorEl),
     onClose: handleClose
-  }, actions.map(action => {
+  }, actions.map(function (action) {
     return /*#__PURE__*/React.createElement(MenuItem, {
       key: action.display_name,
-      onClick: e => handleSelectMenu(e, row, action)
+      onClick: function onClick(e) {
+        return handleSelectMenu(e, row, action);
+      }
     }, action.display_name);
   })), /*#__PURE__*/React.createElement(Grid, {
     container: true,
@@ -1961,7 +2039,7 @@ function RowMenu(props) {
       display: 'flex'
     }
   }, /*#__PURE__*/React.createElement(IconButton, {
-    id: `edit-${row.id}`,
+    id: "edit-" + row.id,
     "aria-label": "more",
     "aria-controls": "long-menu",
     "aria-haspopup": "true",
@@ -1972,7 +2050,7 @@ function RowMenu(props) {
       width: '10px'
     }
   }), /*#__PURE__*/React.createElement(IconButton, {
-    id: `dropdown-${row.id}`,
+    id: "dropdown-" + row.id,
     "aria-label": "more",
     "aria-controls": "long-menu",
     "aria-haspopup": "true",
@@ -1989,21 +2067,22 @@ RowMenu.propTypes = {
 };
 
 function ConfirmDialog(props) {
-  const {
-    type,
-    itemName,
-    openDialog,
-    onCancel,
-    onContinue
-  } = props;
-  const [open, setOpen] = React.useState(openDialog);
+  var type = props.type,
+      itemName = props.itemName,
+      openDialog = props.openDialog,
+      onCancel = props.onCancel,
+      onContinue = props.onContinue;
 
-  const handleClose = () => {
+  var _React$useState2 = React.useState(openDialog),
+      open = _React$useState2[0],
+      setOpen = _React$useState2[1];
+
+  var handleClose = function handleClose() {
     setOpen(false);
     onCancel(false);
   };
 
-  const handleContinue = () => {
+  var handleContinue = function handleContinue() {
     onContinue(true);
   };
 
@@ -2035,39 +2114,75 @@ ConfirmDialog.propTypes = {
 
 function MkTable(props) {
   console.log("props.styles:", props.styles);
-  const classes = useStyles$1(props.styles);
-  const {
-    dispatch,
-    data = [],
-    headers = [],
-    actions,
-    onActions,
-    title,
-    page,
-    rowsPerPage,
-    noMoreToLoad = false,
-    order,
-    orderBy,
-    isLoading = false,
-    onChangePaginatePage,
-    onGetData,
-    onUpdateDataRow,
-    onChangeRowPerPage,
-    dense = true
-  } = props;
-  const [_rowsPerPage, setRowsPerPage] = React.useState(rowsPerPage);
-  const [_page, setPage] = React.useState(page);
-  const [_noMoreToLoad, setNoMoreToLoad] = React.useState(noMoreToLoad);
-  const [_order, setOrder] = React.useState(order);
-  const [_orderBy, setOrderBy] = React.useState(orderBy);
-  const [_isLoading, setIsLoading] = React.useState(isLoading);
-  const [_isConfirm, setIsConfirm] = React.useState(false);
-  const [itemName, setItemName] = React.useState('');
-  const [row, setRow] = React.useState({});
-  const [action, setAction] = React.useState('');
-  const [_dense, setDense] = React.useState(dense);
+  var classes = useStyles$1(props.styles);
+  var dispatch = props.dispatch,
+      _props$data = props.data,
+      data = _props$data === void 0 ? [] : _props$data,
+      _props$headers = props.headers,
+      headers = _props$headers === void 0 ? [] : _props$headers,
+      actions = props.actions,
+      onActions = props.onActions,
+      title = props.title,
+      page = props.page,
+      rowsPerPage = props.rowsPerPage,
+      _props$noMoreToLoad = props.noMoreToLoad,
+      noMoreToLoad = _props$noMoreToLoad === void 0 ? false : _props$noMoreToLoad,
+      order = props.order,
+      orderBy = props.orderBy,
+      _props$isLoading = props.isLoading,
+      isLoading = _props$isLoading === void 0 ? false : _props$isLoading,
+      onChangePaginatePage = props.onChangePaginatePage,
+      onGetData = props.onGetData,
+      onUpdateDataRow = props.onUpdateDataRow,
+      onChangeRowPerPage = props.onChangeRowPerPage,
+      _props$dense = props.dense,
+      dense = _props$dense === void 0 ? true : _props$dense;
 
-  const handleSelectMenu = (row, action) => {
+  var _React$useState3 = React.useState(rowsPerPage),
+      _rowsPerPage = _React$useState3[0],
+      setRowsPerPage = _React$useState3[1];
+
+  var _React$useState4 = React.useState(page),
+      _page = _React$useState4[0],
+      setPage = _React$useState4[1];
+
+  var _React$useState5 = React.useState(noMoreToLoad),
+      _noMoreToLoad = _React$useState5[0],
+      setNoMoreToLoad = _React$useState5[1];
+
+  var _React$useState6 = React.useState(order),
+      _order = _React$useState6[0],
+      setOrder = _React$useState6[1];
+
+  var _React$useState7 = React.useState(orderBy),
+      _orderBy = _React$useState7[0],
+      setOrderBy = _React$useState7[1];
+
+  var _React$useState8 = React.useState(isLoading),
+      _isLoading = _React$useState8[0],
+      setIsLoading = _React$useState8[1];
+
+  var _React$useState9 = React.useState(false),
+      _isConfirm = _React$useState9[0],
+      setIsConfirm = _React$useState9[1];
+
+  var _React$useState10 = React.useState(''),
+      itemName = _React$useState10[0],
+      setItemName = _React$useState10[1];
+
+  var _React$useState11 = React.useState({}),
+      row = _React$useState11[0],
+      setRow = _React$useState11[1];
+
+  var _React$useState12 = React.useState(''),
+      action = _React$useState12[0],
+      setAction = _React$useState12[1];
+
+  var _React$useState13 = React.useState(dense),
+      _dense = _React$useState13[0],
+      setDense = _React$useState13[1];
+
+  var handleSelectMenu = function handleSelectMenu(row, action) {
     if (action === 'delete') {
       setItemName(row.name === undefined ? row.product_desc : row.name);
       setIsConfirm(true);
@@ -2078,21 +2193,21 @@ function MkTable(props) {
     }
   };
 
-  const handleDelete = v => {
+  var handleDelete = function handleDelete(v) {
     setIsConfirm(false);
     onActions(row, action);
   };
 
-  const handleCancel = v => {
+  var handleCancel = function handleCancel(v) {
     setIsConfirm(false);
   };
 
-  const handleRowEdit = row => {
+  var handleRowEdit = function handleRowEdit(row) {
     onUpdateDataRow(row);
   };
 
   var offset = _page * _rowsPerPage;
-  useEffect(() => {
+  useEffect(function () {
     setNoMoreToLoad(noMoreToLoad);
     setPage(page);
     setOrder(order);
@@ -2102,13 +2217,13 @@ function MkTable(props) {
     setDense(dense);
   }, []);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = _orderBy === property && _order === 'asc';
+  var handleRequestSort = function handleRequestSort(event, property) {
+    var isAsc = _orderBy === property && _order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleChangePage = (event, newPage) => {
+  var handleChangePage = function handleChangePage(event, newPage) {
     if (!_noMoreToLoad && (newPage + 1) * _rowsPerPage >= data.length) {
       onGetData();
     }
@@ -2117,7 +2232,7 @@ function MkTable(props) {
     onChangePaginatePage(newPage);
   };
 
-  const handleChangeRowsPerPage = event => {
+  var handleChangeRowsPerPage = function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value));
     onChangeRowPerPage(parseInt(event.target.value));
   };
@@ -2146,7 +2261,7 @@ function MkTable(props) {
   }, /*#__PURE__*/React.createElement(TableCell$1, {
     colSpan: headers.length,
     align: "center"
-  }, " ", /*#__PURE__*/React.createElement(CircularProgress, null))) : data.length !== 0 ? stableSort(data, getComparator(_order, _orderBy)).slice(_page * _rowsPerPage, _page * _rowsPerPage + _rowsPerPage).map((row, index) => {
+  }, " ", /*#__PURE__*/React.createElement(CircularProgress, null))) : data.length !== 0 ? stableSort(data, getComparator(_order, _orderBy)).slice(_page * _rowsPerPage, _page * _rowsPerPage + _rowsPerPage).map(function (row, index) {
     return /*#__PURE__*/React.createElement(TableRow$1, {
       hover: true,
       role: "checkbox",
@@ -2154,7 +2269,7 @@ function MkTable(props) {
       key: row.id,
       id: row.id,
       className: classes.styledTableRow
-    }, headers.map((h, i) => {
+    }, headers.map(function (h, i) {
       if (h.id === 'sr') {
         return /*#__PURE__*/React.createElement(TableCell$1, {
           key: h.id,
@@ -2197,15 +2312,21 @@ function MkTable(props) {
     }, /*#__PURE__*/React.createElement(RowMenu, {
       actions: actions,
       row: row,
-      onRowEdit: data => handleRowEdit(data),
-      onSelectedAction: (data, actionName) => handleSelectMenu(data, actionName)
+      onRowEdit: function onRowEdit(data) {
+        return handleRowEdit(data);
+      },
+      onSelectedAction: function onSelectedAction(data, actionName) {
+        return handleSelectMenu(data, actionName);
+      }
     })) : /*#__PURE__*/React.createElement(TableCell$1, {
       style: {
         width: '150px'
       },
       align: "right"
     }, /*#__PURE__*/React.createElement(IconButton, {
-      onClick: event => handleRowEdit(row),
+      onClick: function onClick(event) {
+        return handleRowEdit(row);
+      },
       size: dense ? "small" : "medium"
     }, /*#__PURE__*/React.createElement(EditIcon, null))));
   }) : /*#__PURE__*/React.createElement(TableRow$1, {
@@ -2215,11 +2336,10 @@ function MkTable(props) {
     }
   })))), /*#__PURE__*/React.createElement(TablePagination, {
     rowsPerPageOptions: [10, 30, 50],
-    labelDisplayedRows: ({
-      from,
-      to,
-      count
-    }) => {
+    labelDisplayedRows: function labelDisplayedRows(_ref) {
+      var from = _ref.from,
+          to = _ref.to,
+          count = _ref.count;
       console.log(from, to, count);
     },
     component: "div",
@@ -2232,8 +2352,12 @@ function MkTable(props) {
     type: title,
     itemName: itemName,
     openDialog: _isConfirm,
-    onCancel: v => handleCancel(),
-    onContinue: v => handleDelete()
+    onCancel: function onCancel(v) {
+      return handleCancel();
+    },
+    onContinue: function onContinue(v) {
+      return handleDelete();
+    }
   }) : /*#__PURE__*/React.createElement("div", null));
 }
 
@@ -2258,72 +2382,76 @@ MkTable.propTypes = {
   styles: propTypes.any
 };
 
-const useStyles$2 = makeStyles(theme => ({
-  root: {
-    width: '100%'
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2)
-  },
-  table: {
-    minWidth: 750
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1
-  },
-  underline: {
-    "&&&:before": {
-      borderBottom: "none"
+var useStyles$2 = makeStyles(function (theme) {
+  return {
+    root: {
+      width: '100%'
     },
-    "&&:after": {
-      borderBottom: "none"
+    paper: {
+      width: '100%',
+      marginBottom: theme.spacing(2)
+    },
+    table: {
+      minWidth: 750
+    },
+    visuallyHidden: {
+      border: 0,
+      clip: 'rect(0 0 0 0)',
+      height: 1,
+      margin: -1,
+      overflow: 'hidden',
+      padding: 0,
+      position: 'absolute',
+      top: 20,
+      width: 1
+    },
+    underline: {
+      "&&&:before": {
+        borderBottom: "none"
+      },
+      "&&:after": {
+        borderBottom: "none"
+      }
+    },
+    button: {
+      color: 'white',
+      width: 150,
+      height: 55
+    },
+    closeButton: {
+      position: 'absolute',
+      right: theme.spacing(1),
+      top: theme.spacing(1),
+      color: theme.palette.grey[500]
+    },
+    headText: {
+      fontSize: 14,
+      "float": "left",
+      color: theme.palette.primary.main,
+      fontWeight: "bold"
     }
-  },
-  button: {
-    color: 'white',
-    width: 150,
-    height: 55
-  },
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500]
-  },
-  headText: {
-    fontSize: 14,
-    float: "left",
-    color: theme.palette.primary.main,
-    fontWeight: "bold"
-  }
-}));
+  };
+});
 
 function getDataString(data, fieldName) {
   return data[fieldName];
 }
 
 function MkInfo(props) {
-  const classes = useStyles$2();
-  const {
-    infoData,
-    displayFields,
-    isNew = false,
-    isEditable,
-    currentTabName,
-    actions
-  } = props;
-  const [editable, setEditable] = React.useState(isEditable !== undefined ? isEditable : true);
+  var classes = useStyles$2();
+  var infoData = props.infoData,
+      displayFields = props.displayFields,
+      _props$isNew = props.isNew,
+      isNew = _props$isNew === void 0 ? false : _props$isNew,
+      isEditable = props.isEditable,
+      currentTabName = props.currentTabName,
+      actions = props.actions;
 
-  const handleEdit = () => {
+  var _React$useState = React.useState(isEditable !== undefined ? isEditable : true),
+      editable = _React$useState[0],
+      setEditable = _React$useState[1];
+
+  var handleEdit = function handleEdit() {
     setEditable(false);
   };
 
@@ -2349,7 +2477,7 @@ function MkInfo(props) {
     sm: 7
   }, !editable ?
   /*#__PURE__*/
-  React.createElement("div", null) : displayFields.map((d, i) => {
+  React.createElement("div", null) : displayFields.map(function (d, i) {
     return /*#__PURE__*/React.createElement(Grid, {
       container: true,
       key: i
@@ -2393,14 +2521,14 @@ function MkInfo(props) {
     container: true,
     direction: "row",
     alignItems: "flex-end"
-  }, actions.map((a, i) => {
+  }, actions.map(function (a, i) {
     if (currentTabName === 'account') {
       if (infoData.status === 'invited') {
         return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
           style: {
             color: 'white',
             backgroundColor: 'grey',
-            float: 'right',
+            "float": 'right',
             marginLeft: '10px'
           }
         }, a.label));
@@ -2411,7 +2539,7 @@ function MkInfo(props) {
           style: {
             color: 'white',
             backgroundColor: 'grey',
-            float: 'right',
+            "float": 'right',
             marginLeft: '10px'
           }
         }, a.label));
@@ -2422,7 +2550,7 @@ function MkInfo(props) {
           style: {
             color: 'white',
             backgroundColor: 'grey',
-            float: 'right',
+            "float": 'right',
             marginLeft: '10px'
           }
         }, a.label));
@@ -2441,7 +2569,7 @@ function MkInfo(props) {
             style: {
               color: 'white',
               backgroundColor: 'grey',
-              float: 'right',
+              "float": 'right',
               marginLeft: '10px'
             }
           }, a.label));
@@ -2462,7 +2590,7 @@ function MkInfo(props) {
         if (a.action_type === 'delete') {
           return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
             style: {
-              float: 'right',
+              "float": 'right',
               marginLeft: '10px'
             }
           }, a.icon, a.label));
@@ -2479,7 +2607,7 @@ function MkInfo(props) {
         if (a.action_type === 'cancel') {
           return /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
             style: {
-              float: 'right',
+              "float": 'right',
               marginLeft: '10px'
             }
           }, a.icon, a.label));
