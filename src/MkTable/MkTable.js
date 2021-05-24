@@ -13,7 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { Box, Button, createMuiTheme, Dialog, DialogActions, DialogTitle, Grid, IconButton, Menu, MenuItem, ThemeProvider } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 function descendingComparator(a, b, _orderBy) {
     if (b[_orderBy] < a[_orderBy]) {
@@ -425,6 +425,7 @@ function MkTable(props) {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value));
         onChangeRowPerPage(parseInt(event.target.value));
+        setPage(0);
     };
 
     const getStatus = (data, header) => {

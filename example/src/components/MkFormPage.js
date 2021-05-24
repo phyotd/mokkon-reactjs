@@ -71,11 +71,14 @@ const MkFormPage = () => {
 
   ];
 
+  const styles = { actionTextcolor: 'white' , primaryColor:'lightBlue' };
+
   return (
     <div className="root">
       <Grid container>
         <Grid item xs={12}>
           <MkForm
+           styles={styles}
             fields={fields}
             data={data}
             buttonColor={'#f05f40'}

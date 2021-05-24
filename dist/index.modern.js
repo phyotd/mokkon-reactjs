@@ -1147,44 +1147,47 @@ var BootstrapInput = withStyles(function (theme) {
     }
   };
 })(InputBase);
-var useStyles = makeStyles(function (theme) {
-  return {
-    root: {
-      width: '100%'
+var useStyles = makeStyles({
+  root: {
+    width: '100%'
+  },
+  paper: {
+    width: '100%'
+  },
+  table: {
+    minWidth: 750
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1
+  },
+  underline: {
+    "&&&:before": {
+      borderBottom: "none"
     },
-    paper: {
-      width: '100%',
-      marginBottom: theme.spacing(2)
-    },
-    table: {
-      minWidth: 750
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: 'rect(0 0 0 0)',
-      height: 1,
-      margin: -1,
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      top: 20,
-      width: 1
-    },
-    underline: {
-      "&&&:before": {
-        borderBottom: "none"
-      },
-      "&&:after": {
-        borderBottom: "none"
-      }
+    "&&:after": {
+      borderBottom: "none"
     }
-  };
+  },
+  actionButton: function actionButton(props) {
+    return {
+      backgroundColor: props.primaryColor === undefined ? 'grey' : props.primaryColor,
+      color: props.actionTextColor === undefined ? 'white' : props.actionTextColor
+    };
+  }
 });
 
 function MButton(props) {
-  var classes = useStyles();
   var action = props.action,
-      onCallback = props.onCallback;
+      onCallback = props.onCallback,
+      buttonStyle = props.buttonStyle;
 
   var handleAction = function handleAction(e) {
     e.preventDefault();
@@ -1192,8 +1195,9 @@ function MButton(props) {
   };
 
   return /*#__PURE__*/React.createElement("div", {
-    className: classes.root
+    className: buttonStyle.root
   }, /*#__PURE__*/React.createElement(Box, null, /*#__PURE__*/React.createElement(Button, {
+    className: buttonStyle.actionButton,
     variant: "contained",
     style: {
       "float": 'right',
@@ -1207,12 +1211,13 @@ function MButton(props) {
 
 MButton.propTypes = {
   history: propTypes.object,
+  buttonStyle: propTypes.any,
   action: propTypes.object.isRequired,
   onCallback: propTypes.func.isRequired
 };
 
 function MkForm(props) {
-  var classes = useStyles();
+  var styles = useStyles(props.styles);
   var _props$fields = props.fields,
       fields = _props$fields === void 0 ? [] : _props$fields,
       _props$data = props.data,
@@ -1283,7 +1288,7 @@ function MkForm(props) {
   var handleSelectItemDialog = function handleSelectItemDialog() {};
 
   return /*#__PURE__*/React.createElement("div", {
-    className: classes.root
+    className: styles.root
   }, /*#__PURE__*/React.createElement(Grid, {
     container: true
   }, /*#__PURE__*/React.createElement(Grid, {
@@ -1639,7 +1644,7 @@ function MkForm(props) {
           marginBottom: '10px'
         }
       }, /*#__PURE__*/React.createElement(GridList, {
-        className: classes.gridList
+        className: styles.gridList
       }, _data[f.field_name] === undefined ? /*#__PURE__*/React.createElement("span", null) : _data[f.field_name].map(function (tile) {
         return /*#__PURE__*/React.createElement(GridListTile, {
           key: tile,
@@ -1740,7 +1745,7 @@ function MkForm(props) {
           marginBottom: '10px'
         }
       }, /*#__PURE__*/React.createElement(TableContainer, null, /*#__PURE__*/React.createElement(Table, {
-        className: classes.table,
+        className: styles.table,
         size: "small",
         "aria-label": "a dense table"
       }, /*#__PURE__*/React.createElement(TableHead, null, /*#__PURE__*/React.createElement(TableRow, null, partHeaders.map(function (h, i) {
@@ -1789,7 +1794,7 @@ function MkForm(props) {
         variant: "outlined",
         size: "small",
         type: "time",
-        className: classes.textField,
+        className: styles.textField,
         InputLabelProps: {
           shrink: true
         },
@@ -1807,7 +1812,8 @@ function MkForm(props) {
         action: a,
         onCallback: function onCallback(event) {
           return a.callback(event, _data);
-        }
+        },
+        buttonStyle: styles
       });
     }
   })) : /*#__PURE__*/React.createElement(Grid, null)));
@@ -1819,7 +1825,8 @@ MkForm.propTypes = {
   data: propTypes.object,
   isNew: propTypes.bool,
   actions: propTypes.array,
-  onDropdownCreateNew: propTypes.func
+  onDropdownCreateNew: propTypes.func,
+  styles: propTypes.any
 };
 
 function descendingComparator(a, b, _orderBy) {
@@ -2235,6 +2242,7 @@ function MkTable(props) {
   var handleChangeRowsPerPage = function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value));
     onChangeRowPerPage(parseInt(event.target.value));
+    setPage(0);
   };
 
   return /*#__PURE__*/React.createElement("div", {

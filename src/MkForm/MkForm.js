@@ -61,13 +61,13 @@ const BootstrapInput = withStyles((theme) => ({
     },
 }))(InputBase);
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     root: {
         width: '100%',
     },
     paper: {
         width: '100%',
-        marginBottom: theme.spacing(2),
+        // marginBottom: theme.spacing(2),
     },
     table: {
         minWidth: 750,
@@ -90,12 +90,15 @@ const useStyles = makeStyles((theme) => ({
         "&&:after": {
             borderBottom: "none"
         }
-    }
-}));
+    },
+    actionButton: props => ({
+        backgroundColor: props.primaryColor === undefined ? 'grey' : props.primaryColor,
+        color: props.actionTextColor === undefined ? 'white' : props.actionTextColor
+    })
+});
 
 function MButton(props) {
-    const classes = useStyles();
-    const { action, onCallback } = props;
+    const { action, onCallback, buttonStyle } = props;
 
     const handleAction = (e) => {
         e.preventDefault();
@@ -103,9 +106,9 @@ function MButton(props) {
     }
 
     return (
-        <div className={classes.root}>
+        <div className={buttonStyle.root}>
             <Box>
-                <Button
+                <Button className={buttonStyle.actionButton}
                     variant="contained" style={{ float: 'right', margin: "5px" }}
                     onClick={(e) => handleAction(e)}
                 >{action.icon}{action.label}</Button>
@@ -116,6 +119,7 @@ function MButton(props) {
 
 MButton.propTypes = {
     history: PropTypes.object,
+    buttonStyle: PropTypes.any,
     action: PropTypes.object.isRequired,
     onCallback: PropTypes.func.isRequired
 };
@@ -123,7 +127,7 @@ MButton.propTypes = {
 
 
 function MkForm(props) {
-    const classes = useStyles();
+    const styles = useStyles(props.styles);
     const {
         fields = [],
         data = {},
@@ -190,7 +194,7 @@ function MkForm(props) {
     }
 
     return (
-        <div className={classes.root}>
+        <div className={styles.root}>
             <Grid container>
                 <Grid item xs={12}>
                     {fields.map((f, i) => {
@@ -391,7 +395,7 @@ function MkForm(props) {
                                         style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                         <Grid item xs={12}>
                                             <div style={{ display: 'block', alignItems: 'center', marginBottom: '10px' }}>
-                                                <GridList className={classes.gridList}>
+                                                <GridList className={styles.gridList}>
                                                     {_data[f.field_name] === undefined ? <span /> : _data[f.field_name].map((tile) => (
                                                         <GridListTile key={tile} style={{ width: '100px', height: '100px' }}>
                                                             <img src={tile} alt={tile} onClick={(e) => {
@@ -453,7 +457,7 @@ function MkForm(props) {
 
                                     <div style={{ display: 'block', alignItems: 'center', marginBottom: '10px' }}>
                                         <TableContainer>
-                                            <Table className={classes.table} size="small" aria-label="a dense table">
+                                            <Table className={styles.table} size="small" aria-label="a dense table">
                                                 <TableHead>
                                                     <TableRow>
                                                         {partHeaders.map((h, i) => {
@@ -490,7 +494,7 @@ function MkForm(props) {
                                     variant="outlined"
                                     size="small"
                                     type="time"
-                                    className={classes.textField}
+                                    className={styles.textField}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -511,7 +515,7 @@ function MkForm(props) {
                     <Grid item xs={12}>
                         {actions.map((a) => {
                             if (a.status === _data.status) {
-                                return <MButton action={a} onCallback={(event) => a.callback(event, _data)} />;
+                                return <MButton action={a} onCallback={(event) => a.callback(event, _data)} buttonStyle={styles} />;
                             }
                         })}
 
@@ -528,7 +532,8 @@ MkForm.propTypes = {
     data: PropTypes.object,
     isNew: PropTypes.bool,
     actions: PropTypes.array,
-    onDropdownCreateNew: PropTypes.func
+    onDropdownCreateNew: PropTypes.func,
+    styles: PropTypes.any
 };
 
 export default (MkForm);
