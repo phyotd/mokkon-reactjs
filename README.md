@@ -24,7 +24,7 @@ Mokkon's reactjs components
 | can_create      | boolean      |  | To handle adding new object from dropdown or autocomplete |
 | readonly      | boolean      |  | To handle for not editable form |
 | option_label_field      | string      |  | Field name to get label of option in dropdown |
-| style      | object      | { headerBackgroundColor: '#0d47a1a8', headerTextcolor: 'white' , primaryColor:'#0d47a11c' } | style object<br/><br/>Table Header's background color: ***headerBackgroundColor*** <br/>Table Text's color: ***headerTextcolor*** <br/>Table even row's background color: ***primaryColor*** <br/><br/> Example: <br/>{ headerBackgroundColor: 'green', headerTextcolor: 'white' , primaryColor:'lightBlue' } |
+| style      | object      | { buttonTextcolor: 'white' , primaryColor:'#0d47a11c' } | style object<br/><br/>Button Text's color: ***buttonTextcolor*** <br/>Button's background color: ***primaryColor*** <br/><br/> Example: <br/>{ buttonTextcolor: 'white' , primaryColor:'lightBlue' } |
 
  
  **Example of field object** 
@@ -92,6 +92,8 @@ Example of data object
 | onGetData | function      |     | To Get data list
 | onChangeRowPerPage | function      |     | To change number of rows in page
 | dense | boolean      |   true  | To handle table size
+| style      | object      | { headerBackgroundColor: '#0d47a1a8', headerTextcolor: 'white' , primaryColor:'#0d47a11c' } | style object<br/><br/>Table Header's background color: ***headerBackgroundColor*** <br/>Table Text's color: ***headerTextcolor*** <br/>Table even row's background color: ***primaryColor*** <br/><br/> Example: <br/>{ headerBackgroundColor: 'green', headerTextcolor: 'white' , primaryColor:'lightBlue' } |
+
 
  **Example of action object **
 ```javascript
